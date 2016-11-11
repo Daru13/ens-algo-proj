@@ -11,4 +11,7 @@ typedef char bool;
 #define true  1
 #define false 0
 
+// Macro to check the correct execution of a malloc() call
+#define CHECK_MALLOC(ptr) assert(ptr != NULL);
+
 #endif

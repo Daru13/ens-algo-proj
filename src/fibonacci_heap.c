@@ -11,11 +11,8 @@
 #include "toolbox.h"
 #include "fibonacci_heap.h"
 
-
-#define CHECK_MALLOC(ptr) assert(ptr != NULL);
-
 //------------------------------------------------------------------------------
-// Basic operations
+// Creation and deletion of objects
 //------------------------------------------------------------------------------
 
 // Returns a pointer to a new node
@@ -75,6 +72,47 @@ void freeNodeTree (Node* root)
 	free(root);
 }
 
+//------------------------------------------------------------------------------
+
+// Returns a pointer to a new, empty Fibonacci heap
+FiboHeap* createFiboHeap ()
+{
+	FiboHeap* new_fibo_heap = malloc(sizeof(FiboHeap));
+	CHECK_MALLOC(new_fibo_heap)
+
+	new_fibo_heap->min_element 	= NULL;
+	new_fibo_heap->nb_nodes 	= 0;
+
+	return new_fibo_heap;
+}
+
+// Free a Fibonacci heap
+void freeFiboHeap (FiboHeap* fibo_heap)
+{
+	// Free all the (sub-)heaps
+	Node* current_heap_root = fibo_heap->min_element;
+	if (current_heap_root != NULL)
+	{
+		Node* next_heap_root = current_heap_root->next;
+		while (next_heap_root != fibo_heap->min_element)
+		{
+			current_heap_root 	= next_heap_root;
+			next_heap_root 		= next_heap_root->next;
+
+			freeNodeTree(current_heap_root);
+		}
+
+		freeNodeTree(fibo_heap->min_element);
+	}
+
+	// Free the Fibonacci heap itself
+	free(fibo_heap);
+}
+
+//------------------------------------------------------------------------------
+// Basic operations on nodes
+//------------------------------------------------------------------------------
+
 // Returns 1 if a node has at least one sibling, 0 otherwise
 bool hasSibling (const Node* node)
 {
@@ -115,44 +153,7 @@ unsigned int getNbNodesOfList (Node* const node)
 }
 
 //------------------------------------------------------------------------------
-
-// Returns a pointer to a new, empty Fibonacci heap
-FiboHeap* createFiboHeap ()
-{
-	FiboHeap* new_fibo_heap = malloc(sizeof(FiboHeap));
-	CHECK_MALLOC(new_fibo_heap)
-
-	new_fibo_heap->min_element 	= NULL;
-	new_fibo_heap->nb_nodes 	= 0;
-
-	return new_fibo_heap;
-}
-
-// Free a Fibonacci heap
-void freeFiboHeap (FiboHeap* fibo_heap)
-{
-	// Free all the (sub-)heaps
-	Node* current_heap_root = fibo_heap->min_element;
-	if (current_heap_root != NULL)
-	{
-		Node* next_heap_root = current_heap_root->next;
-		while (next_heap_root != fibo_heap->min_element)
-		{
-			current_heap_root 	= next_heap_root;
-			next_heap_root 		= next_heap_root->next;
-
-			freeNodeTree(current_heap_root);
-		}
-
-		freeNodeTree(fibo_heap->min_element);
-	}
-
-	// Free the Fibonacci heap itself
-	free(fibo_heap);
-}
-
-//------------------------------------------------------------------------------
-// Operations on nodes
+// Advanced operations on nodes
 //------------------------------------------------------------------------------
 
 // Extracts a node from a CDLL
@@ -275,60 +276,3 @@ Node* getMinimumElement (const FiboHeap* fibo_heap)
 }
 
 
-
-//------------------------------------------------------------------------------
-
-void printTestingInfo (Nodes* const nodes, const unsigned int n)
-{
-	for (int i = 0; i < n; i++)
-		printf("Node %d has %d sibling(s) and %d father.\n",
-			i,
-			getNbNodesOfList(nodes[i]) - 1,
-			nodes[i]->father != NULL ? 1 : 0);
-}
-
-int main ()
-{
-	//---------- Nodes of CDLLs ----------
-	
-	NodeValue node_val_0 = 0;
-	NodeValue node_val_1 = 42;
-	NodeValue node_val_2 = -128;
-
-	Node* nodes[3];
-	nodes[0] = createIsolatedNode(node_val_0);
-	nodes[1] = createIsolatedNode(node_val_1);
-	nodes[2] = createIsolatedNode(node_val_2);
-
-	printTestingInfo(nodes, 3);
-
-	printf("[Nodes 0, 1 and 2 are merged]\n");
-	mergeNodeLists(nodes[0], nodes[1]);
-	mergeNodeLists(nodes[0], nodes[2]);
-
-	printTestingInfo(nodes, 3);
-
-	printf("[Node 1 is extracted]\n");
-	extractNodeFromList(nodes[1]);
-
-	printTestingInfo(nodes, 3);
-
-	//---------- Fibonacci heap ----------
-
-	FiboHeap* fibo_heap = createFiboHeap();
-	insertNodeInFiboHeap(fibo_heap, nodes[1]);
-
-	printf("Fibonacci heap has a total of %d node(s).\n", fibo_heap->nb_nodes);
-
-	Node* fibo_heap_min_element = getMinimumElement(fibo_heap);
-	printf("Value of its minimum element: %d\n",
-			fibo_heap_min_element != NULL ? fibo_heap_min_element->value : -1);
-
-	// Cleaning
-	for(int i = 0; i < 3; i++)
-		freeNodeTree(nodes[i]);
-
-	freeFiboHeap(fibo_heap);
-
-	return 0;
-}

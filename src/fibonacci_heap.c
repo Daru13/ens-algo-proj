@@ -52,10 +52,11 @@ void freeNode (Node* node)
 // Recursively free a tree of nodes, from a given root
 void freeNodeTree (Node* root)
 {
-	// Free all the root's children
+	// Free all the root's children (recursively, DFS-like), if any
 	Node* current_child = root->child;
 	if (current_child != NULL)
 	{
+		// Free all the siblings of the pointed child, if any
 		Node* next_child = current_child->next;
 		while (next_child != root->child)
 		{
@@ -65,6 +66,7 @@ void freeNodeTree (Node* root)
 			freeNodeTree(current_child);
 		}
 
+		// Free the pointed child
 		freeNodeTree(root->child);
 	}
 
@@ -89,10 +91,11 @@ FiboHeap* createFiboHeap ()
 // Free a Fibonacci heap
 void freeFiboHeap (FiboHeap* fibo_heap)
 {
-	// Free all the (sub-)heaps
+	// Free all the (sub-)heaps, if any
 	Node* current_heap_root = fibo_heap->min_element;
 	if (current_heap_root != NULL)
 	{
+		// Free all the minimum element's heap siblings, if any
 		Node* next_heap_root = current_heap_root->next;
 		while (next_heap_root != fibo_heap->min_element)
 		{
@@ -102,10 +105,11 @@ void freeFiboHeap (FiboHeap* fibo_heap)
 			freeNodeTree(current_heap_root);
 		}
 
+		// Free the minimum element's heap
 		freeNodeTree(fibo_heap->min_element);
 	}
 
-	// Free the Fibonacci heap itself
+	// Free the Fibonacci heap structure itself
 	free(fibo_heap);
 }
 
@@ -138,7 +142,7 @@ unsigned int getNbNodesOfList (Node* const node)
 	if (hasFather(node))
 		return node->father->degree;
 
-	// Else, nodes must be counted
+	// Else, nodes of the CDLL must be counted
 	unsigned int nb_siblings = 0;
 
 	Node* current_node = node;
@@ -149,7 +153,7 @@ unsigned int getNbNodesOfList (Node* const node)
 		nb_siblings++;
 	}
 
-	return nb_siblings;
+	return nb_siblings + 1;
 }
 
 //------------------------------------------------------------------------------

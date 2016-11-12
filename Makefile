@@ -10,11 +10,8 @@ OBJS = build/fibonacci_heap.o build/toolbox.o
 # Dependencies and compiling rules
 all: build/main_test
 
-build/main_test: $(OBJS)
+build/main_test: src/main_test.c src/main_test.h $(OBJS)
 	$(CC) $(CCFLAGS) $(OBJS) src/main_test.c -o build/main_test 
-
-build/main_test.o : src/main_test.c src/main_test.h src/fibonacci_heap.c src/fibonacci_heap.h src/toolbox.h
-	$(CC) $(CCFLAGS) -c src/main_test.c -o build/main_test.o
 
 main_test.h : src/fibonacci_heap.h
 

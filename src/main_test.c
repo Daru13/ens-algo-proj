@@ -16,10 +16,21 @@
 void printNodesInfo (Node* const nodes[], const int n)
 {
 	for (int i = 0; i < n; i++)
-		printf("Node %d has %d sibling(s) and %d father.\n",
+		printf("Node %d is in a list of %d node(s) and has %d father.\n",
 			i,
-			getNbNodesOfList(nodes[i]) - 1,
+			getNbNodesOfList(nodes[i]),
 			nodes[i]->father != NULL ? 1 : 0);
+}
+
+void printfFiboHeapInfo (FiboHeap* const fibo_heap)
+{
+	// Number of nodes
+	printf("The Fibonacci heap has a total of %d node(s).\n", fibo_heap->nb_nodes);
+
+	// Minimum element
+	Node* fibo_heap_min_element = getMinimumElement(fibo_heap);
+	printf("Value of its minimum element: %d\n",
+			fibo_heap_min_element != NULL ? fibo_heap_min_element->value : -1);
 }
 
 void mainTest_1 ()
@@ -30,6 +41,7 @@ void mainTest_1 ()
 	NodeValue node_val_1 = 42;
 	NodeValue node_val_2 = -128;
 
+	printProgressMessage("[3 nodes are created]\n");
 	Node* nodes[3];
 	nodes[0] = createIsolatedNode(node_val_0);
 	nodes[1] = createIsolatedNode(node_val_1);
@@ -37,32 +49,41 @@ void mainTest_1 ()
 
 	printNodesInfo(nodes, 3);
 
-	printf("[Nodes 0, 1 and 2 are merged]\n");
+	printProgressMessage("[Nodes 0, 1 and 2 are merged]\n");
 	mergeNodeLists(nodes[0], nodes[1]);
 	mergeNodeLists(nodes[0], nodes[2]);
 
 	printNodesInfo(nodes, 3);
 
-	printf("[Node 1 is extracted]\n");
+	printProgressMessage("[Node 1 is extracted]\n");
 	extractNodeFromList(nodes[1]);
 
 	printNodesInfo(nodes, 3);
 
 	//---------- Fibonacci heap ----------
 
+	printf("\n");
+
+	printProgressMessage("[A Fibonacci heap is created]\n");
 	FiboHeap* fibo_heap = createFiboHeap();
+
+	printProgressMessage("[Node 1 is inserted in the Fibonacci heap]\n");
 	insertNodeInFiboHeap(fibo_heap, nodes[1]);
 
-	printf("Fibonacci heap has a total of %d node(s).\n", fibo_heap->nb_nodes);
+	printfFiboHeapInfo(fibo_heap);
 
-	Node* fibo_heap_min_element = getMinimumElement(fibo_heap);
-	printf("Value of its minimum element: %d\n",
-			fibo_heap_min_element != NULL ? fibo_heap_min_element->value : -1);
+	printProgressMessage("[Node 2 is extracted, then inserted in the Fibonacci heap]\n");
+	extractNodeFromList(nodes[2]);
+	insertNodeInFiboHeap(fibo_heap, nodes[2]);
 
-	// Cleaning
-	for(int i = 0; i < 3; i++)
-		freeNodeTree(nodes[i]);
+	printNodesInfo(nodes, 3);
+	printfFiboHeapInfo(fibo_heap);
 
+	//---------- Cleaning ----------
+
+	printf("\n");
+
+	printProgressMessage("[The Fibonacci heap is deleted]\n");
 	freeFiboHeap(fibo_heap);
 }
 

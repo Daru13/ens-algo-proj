@@ -1,21 +1,32 @@
+# DIJKSTRA WITH FIBONACCI HEAPS - 2016 Programming course project
+# Some compiling-related parameters
 CC = clang
-CCFLAGS = -g -W -Wall -pedantic -ansi -std=c99
+CCFLAGS = -g -W -Wall -pedantic -std=c99
 
-OBJS = fibonacci_heap.o toolbox.o
+##### THIS LIST MUST BE UPDATED #####
+# List of all  object files which must be produced before any binary
+OBJS = build/fibonacci_heap.o build/toolbox.o
 
-all: fibheap
+# Dependencies and compiling rules
+all: build/main_test
 
-fibheap : $(OBJS)
-	$(CC) $(CCFLAGS) -o fibheap fibonacci_heap.c
+build/main_test: $(OBJS)
+	$(CC) $(CCFLAGS) $(OBJS) src/main_test.c -o build/main_test 
 
-fibonacci_heap.o : fibonacci_heap.c fibonacci_heap.h toolbox.h
-	$(CC) $(CCFLAGS) -c fibonacci_heap.c
+build/main_test.o : src/main_test.c src/main_test.h src/fibonacci_heap.c src/fibonacci_heap.h src/toolbox.h
+	$(CC) $(CCFLAGS) -c src/main_test.c -o build/main_test.o
 
-fibonacci_heap.h : toolbox.h
+main_test.h : src/fibonacci_heap.h
 
-toolbox.o : toolbox.c toolbox.h
-	$(CC) $(CCFLAGS) -c toolbox.c
+build/fibonacci_heap.o : src/fibonacci_heap.c src/fibonacci_heap.h src/toolbox.h
+	$(CC) $(CCFLAGS) -c src/fibonacci_heap.c -o build/fibonacci_heap.o
 
+fibonacci_heap.h : src/toolbox.h
+
+build/toolbox.o : src/toolbox.c src/toolbox.h
+	$(CC) $(CCFLAGS) -c src/toolbox.c -o build/toolbox.o
+
+# Cleaning rule(s)
 clean:
-	- rm fibheap
-	- rm -f *.o
+	- rm build/main_test
+	- rm build/*.o

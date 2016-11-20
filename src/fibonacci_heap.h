@@ -59,8 +59,11 @@ unsigned int getNbNodesOfList (Node* const node);
 
 void extractNodeFromList (Node* node);
 void mergeNodeLists (Node* source, Node* destination);
+void insertNodeAsChild (Node* child, Node* father);
 
 void insertNodeInFiboHeap (FiboHeap* fibo_heap, Node* node);
 Node* getMinimumElement (const FiboHeap* fibo_heap);
+void linkRootNodes (Node* child, Node* father);
+void consolidateFiboHeap (FiboHeap* fibo_heap);
 
 #endif

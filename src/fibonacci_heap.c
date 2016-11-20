@@ -189,7 +189,8 @@ void extractNodeFromList (Node* node)
 }
 
 // Merge two CDLLs of nodes, by adding source nodes in the same list as destination
-// Both lists must be different CDLLs!
+// Both lists must be different CDLLs; else, the result is undefined
+// Note that pointers to father are *not* updated
 void mergeNodeLists (Node* source, Node* destination)
 {
 	// Get the last node of each list (assuming the given nodes are the "first" ones)
@@ -197,58 +198,29 @@ void mergeNodeLists (Node* source, Node* destination)
 	Node* destination_last_node = destination->previous;
 
 	// Update the first and last elements of each list
-	// Scheme: "LAST_DEST--------FIRST_DEST-LAST_SRC--------------FIRST_SRC"
+	// Scheme: "LAST_DEST-(...)-FIRST_DEST-LAST_SRC-(...)-FIRST_SRC"
 	destination->next 	= source;
 	source->previous 	= destination;
 
 	destination_last_node->previous = source_last_node;
 	source_last_node->next 			= destination_last_node;
 
-	// TODO: nothing more here?
 	return;
-/*
-	// Update the pointers to the father
-	Node* current_node = source;
-	while (current_node != destination_last_node)
-	{
-		current_node->father = destination->father;
-		current_node = current_node->next;
-	}
-
-	// Update the degree of the father, if any
-*/
 }
 
-/*
-// Add a list of nodes to the children of a father node
-void insertListOfNodesAsChildren (Node* node, Node* father)
+// Insert a node as the child of a given node (supposed not a child of the father)
+// This function also updates the fields which must be changed
+void insertNodeAsChild (Node* child, Node* father)
 {
-	// TODO
-	return;
-
-	// If the father has no child, the nodes must be a CDLL
-	if (! hasChild(father))
-	{
-		// Update the pointers to the father
-		Node* current_node = source;
-		while (current_node != destination_last_node)
-		{
-			current_node->father = destination->father;
-			current_node = current_node->next;
-		}
-
-		// Update the father's pointer to one child
-		father->child = node;
-	}
+	// Insert the node in the CDLL
+	if (father->child == NULL)
+		father->child = child;
 	else
-		mergeNodeLists(node, father->child);
-	
-	// The new child is updated
-	node->is_tagged = false;
+		mergeNodeLists(child, father->child);
 
-	/// The father is updated
-	(father->degree) += ;
-}*/
+	// Increase the degree of the father
+	(father->degree)++;
+}
 
 //------------------------------------------------------------------------------
 // Operations on Fibonacci heaps
@@ -279,6 +251,8 @@ Node* getMinimumElement (const FiboHeap* fibo_heap)
 	return fibo_heap->min_element;
 }
 
+// Merge two Fibonacci heaps
+// The two heaps must be different; otherwise, the behaviour is undefined
 FiboHeap* mergeFiboHeaps (FiboHeap* fibo_heap_1, FiboHeap* fibo_heap_2)
 {
 	FiboHeap* new_fibo_heap = createFiboHeap();
@@ -305,4 +279,21 @@ FiboHeap* mergeFiboHeaps (FiboHeap* fibo_heap_1, FiboHeap* fibo_heap_2)
 	free(fibo_heap_2);
 
 	return new_fibo_heap;
+}
+
+// Make a root node of a Fibonacci heap become the child of another root node
+void linkRootNodes (Node* child, Node* father)
+{
+	// The child node is extracted from the list of roots
+	extractNodeFromList(child);
+
+	// Then, it is inserted as the child of the father node
+	insertNodeAsChild(child, father);
+}
+
+// Consolidate a Fibonacci heap, i.e. force all the roots of the heaps to have
+// different degrees
+void consolidateFiboHeap (FiboHeap* fibo_heap)
+{
+
 }

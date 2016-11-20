@@ -88,7 +88,7 @@ FiboHeap* createFiboHeap ()
 	return new_fibo_heap;
 }
 
-// Free a Fibonacci heap
+// Free a Fibonacci heap (including all its nodesS)
 void freeFiboHeap (FiboHeap* fibo_heap)
 {
 	// Free all the (sub-)heaps, if any
@@ -206,7 +206,7 @@ void mergeNodeLists (Node* source, Node* destination)
 
 	// TODO: nothing more here?
 	return;
-
+/*
 	// Update the pointers to the father
 	Node* current_node = source;
 	while (current_node != destination_last_node)
@@ -216,7 +216,7 @@ void mergeNodeLists (Node* source, Node* destination)
 	}
 
 	// Update the degree of the father, if any
-
+*/
 }
 
 /*
@@ -279,4 +279,30 @@ Node* getMinimumElement (const FiboHeap* fibo_heap)
 	return fibo_heap->min_element;
 }
 
+FiboHeap* mergeFiboHeaps (FiboHeap* fibo_heap_1, FiboHeap* fibo_heap_2)
+{
+	FiboHeap* new_fibo_heap = createFiboHeap();
 
+	// Merge the lists of nodes
+	mergeNodeLists(fibo_heap_1->min_element, fibo_heap_2->min_element);
+
+	// Set the minimum element of the new Fibonaccci heap
+	Node* min_element_1 = fibo_heap_1->min_element;
+	Node* min_element_2 = fibo_heap_2->min_element;
+
+	new_fibo_heap->min_element = min_element_1;
+	if (min_element_1 == NULL
+	|| (min_element_2 != NULL && min_element_2->value < min_element_1->value))
+		new_fibo_heap->min_element = min_element_2;
+
+	// Set the total number of nodes of the new Fibonacci heap
+	new_fibo_heap->nb_nodes = fibo_heap_1->nb_nodes
+							+ fibo_heap_2->nb_nodes;
+
+	// Free the merged Fibonacci heaps
+	// This is done WITHOUT FREEING THE NODES THEY CONTAIN!
+	free(fibo_heap_1);
+	free(fibo_heap_2);
+
+	return new_fibo_heap;
+}

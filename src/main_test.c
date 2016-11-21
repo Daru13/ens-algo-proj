@@ -68,13 +68,13 @@ void mainTest_1 ()
 	FiboHeap* fibo_heap = createFiboHeap();
 
 	printProgressMessage("[Node 1 is inserted in the Fibonacci heap]\n");
-	insertNodeInFiboHeap(fibo_heap, nodes[1]);
+	insertSingleRootInFiboHeap(fibo_heap, nodes[1]);
 
 	printfFiboHeapInfo(fibo_heap);
 
 	printProgressMessage("[Node 2 is extracted, then inserted in the Fibonacci heap]\n");
 	extractNodeFromList(nodes[2]);
-	insertNodeInFiboHeap(fibo_heap, nodes[2]);
+	insertSingleRootInFiboHeap(fibo_heap, nodes[2]);
 
 	printNodesInfo(nodes, 3);
 	printfFiboHeapInfo(fibo_heap);

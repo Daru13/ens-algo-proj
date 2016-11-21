@@ -83,6 +83,7 @@ FiboHeap* createFiboHeap ()
 	CHECK_MALLOC(new_fibo_heap)
 
 	new_fibo_heap->min_element 	= NULL;
+	new_fibo_heap->degree 		= 0;
 	new_fibo_heap->nb_nodes 	= 0;
 
 	return new_fibo_heap;
@@ -226,8 +227,8 @@ void insertNodeAsChild (Node* child, Node* father)
 // Operations on Fibonacci heaps
 //------------------------------------------------------------------------------
 
-// Insert a *single* node into a Fibonacci heap
-void insertNodeInFiboHeap (FiboHeap* fibo_heap, Node* node)
+// Insert a *single* node into a Fibonacci heap, as a heap root
+void insertSingleRootInFiboHeap (FiboHeap* fibo_heap, Node* node)
 {
 	if (fibo_heap->min_element == NULL)
 		fibo_heap->min_element = node;
@@ -241,7 +242,8 @@ void insertNodeInFiboHeap (FiboHeap* fibo_heap, Node* node)
 			fibo_heap->min_element = node;
 	}
 
-	// Update the total number of nodes of the heap
+	// Update the total number of nodes and the degree of the heap
+	(fibo_heap->degree)++;
 	(fibo_heap->nb_nodes)++;
 }
 
@@ -269,7 +271,10 @@ FiboHeap* mergeFiboHeaps (FiboHeap* fibo_heap_1, FiboHeap* fibo_heap_2)
 	|| (min_element_2 != NULL && min_element_2->value < min_element_1->value))
 		new_fibo_heap->min_element = min_element_2;
 
-	// Set the total number of nodes of the new Fibonacci heap
+	// Set the degree and the total number of nodes of the new Fibonacci heap
+	new_fibo_heap->degree = fibo_heap_1->degree
+						  + fibo_heap_2->degree;
+
 	new_fibo_heap->nb_nodes = fibo_heap_1->nb_nodes
 							+ fibo_heap_2->nb_nodes;
 
@@ -289,11 +294,59 @@ void linkRootNodes (Node* child, Node* father)
 
 	// Then, it is inserted as the child of the father node
 	insertNodeAsChild(child, father);
+
+	// Set the tag of the new child to false
+	child->is_tagged = false;
 }
 
 // Consolidate a Fibonacci heap, i.e. force all the roots of the heaps to have
-// different degrees
+// different degrees by rearranging the structure of the Fibonacci heap
 void consolidateFiboHeap (FiboHeap* fibo_heap)
 {
+	// Create and init an array of nodes indexed on degrees
+	Node** roots_of_degree = malloc(fibo_heap->degree * sizeof(Node*));
+	CHECK_MALLOC(roots_of_degree);
 
+	for (unsigned int i = 0; i <= fibo_heap->degree; i++)
+		roots_of_degree[i] = NULL;
+
+	// Browse the list of heap roots
+	// Roots with the same degrees are linked together until they all differ
+	Node* current_node_ref = fibo_heap->min_element;
+	if (current_node_ref != NULL)
+		do 
+		{
+			Node* 		 current_node 	= current_node_ref;
+			unsigned int current_degree = current_node->degree;
+
+			// Make sure there is only one root of degree current_degree
+			// TODO: use if instead of while? What is the difference?
+			while (roots_of_degree[current_degree] != NULL)
+			{
+				Node* current_root = roots_of_degree[current_degree];
+
+				// The node with the highest value becomes the child of the other one
+				Node *child, *father;
+				if (current_node->value > current_root->value)
+				{
+					child  = current_node;
+					father = current_root;
+				}
+				else
+				{
+					child  = current_root;
+					father = current_node;
+				}
+
+				// "Link" the two nodes together, in the right order
+				// The degree of the new father is also updated
+				linkRootNodes(child, father);
+
+				// Since the node with the smallest value is kept as a root,
+				// the minimum element of the Fibonacci heap will necessarily
+				// be kept among the roots ; no need to update it manually.
+			}
+
+			roots_of_degree[current_degree] = current_node;
+		} while (current_node_ref != fibo_heap->min_element);
 }

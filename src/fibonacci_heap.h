@@ -38,6 +38,9 @@ typedef struct FiboHeap {
 	// This is sufficient to access the collection of heaps!
 	Node* min_element;
 
+	// Degree of the Fibonacci heap (i.e. number of heap roots)
+	unsigned int degree;
+
 	// Total number of nodes
 	unsigned int nb_nodes;
 
@@ -61,7 +64,7 @@ void extractNodeFromList (Node* node);
 void mergeNodeLists (Node* source, Node* destination);
 void insertNodeAsChild (Node* child, Node* father);
 
-void insertNodeInFiboHeap (FiboHeap* fibo_heap, Node* node);
+void insertSingleRootInFiboHeap (FiboHeap* fibo_heap, Node* node);
 Node* getMinimumElement (const FiboHeap* fibo_heap);
 void linkRootNodes (Node* child, Node* father);
 void consolidateFiboHeap (FiboHeap* fibo_heap);

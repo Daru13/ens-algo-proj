@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "toolbox.h"
 #include "fibonacci_heap.h"
 #include "main_test.h"
@@ -16,8 +17,9 @@
 void printNodesInfo (Node* const nodes[], const int n)
 {
 	for (int i = 0; i < n; i++)
-		printf("Node %d is in a list of %d node(s) and has %d father.\n",
+		printf("Node %d has value %d, is in a list of %d node(s) and has %d father.\n",
 			i,
+			nodes[i]->value,
 			getNbNodesOfList(nodes[i]),
 			nodes[i]->father != NULL ? 1 : 0);
 }
@@ -28,13 +30,15 @@ void printfFiboHeapInfo (FiboHeap* const fibo_heap)
 	printf("The Fibonacci heap has a total of %d node(s).\n", fibo_heap->nb_nodes);
 
 	// Minimum element
-	Node* fibo_heap_min_element = getMinimumElement(fibo_heap);
+	Node* fibo_heap_min_element = fibo_heap->min_element;
 	printf("Value of its minimum element: %d\n",
 			fibo_heap_min_element != NULL ? fibo_heap_min_element->value : -1);
 }
 
 void mainTest_1 ()
 {
+	printProgressMessage("\n--------- MAIN TEST 1 ---------\n");
+
 	//---------- Nodes of CDLLs ----------
 	
 	NodeValue node_val_0 = 0;
@@ -79,6 +83,67 @@ void mainTest_1 ()
 	printNodesInfo(nodes, 3);
 	printfFiboHeapInfo(fibo_heap);
 
+	printProgressMessage("[Extracting minimum value, two times]\n");
+	Node* min_node_1 =  extractMinFromFiboHeap(fibo_heap);
+	Node* min_node_2 =  extractMinFromFiboHeap(fibo_heap);
+	printf("Extracted values are %d and %d\n", min_node_1->value, min_node_2->value);
+	printfFiboHeapInfo(fibo_heap);
+
+	//---------- Cleaning ----------
+
+	printf("\n");
+
+	printProgressMessage("[The Fibonacci heap is deleted]\n");
+	freeFiboHeap(fibo_heap);
+}
+
+void mainTest_2 ()
+{
+	printProgressMessage("\n--------- MAIN TEST 2 ---------\n");
+
+	// Many nodes are created, the inserted in an empty Fibonacci heap
+	// Their values are randomly selected in a small range (to force collisions)
+
+	#define NB_GEN_NODES 64
+	#define MIN_VALUE -10
+	#define MAX_VALUE 10
+
+	printProgressMessage("[Nodes with random values are created]\n");
+	printf("%d nodes created, values ranging from %d to %d\n",
+			NB_GEN_NODES, MIN_VALUE, MAX_VALUE);
+
+	Node* generated_nodes[NB_GEN_NODES];
+	for (int i = 0; i < NB_GEN_NODES; i++)
+	{
+		int random_value = rand() % (MAX_VALUE - MIN_VALUE + 1) + MIN_VALUE;
+		 generated_nodes[i] = createIsolatedNode(random_value);
+	}
+
+	//---------- Fibonacci heap ----------
+
+	printf("\n");
+
+	printProgressMessage("[A Fibonacci heap is created]\n");
+	FiboHeap* fibo_heap = createFiboHeap();
+
+	printProgressMessage("[All nodes are inserted in the Fibonacci heap]\n");
+	for (int i = 0; i < NB_GEN_NODES; i++)
+		insertSingleRootInFiboHeap(fibo_heap, generated_nodes[i]);
+
+	printfFiboHeapInfo(fibo_heap);
+
+	printProgressMessage("[Half of the minimum values are extracted]\n");
+	Node* extracted_min_nodes[NB_GEN_NODES / 2];
+	for (int i = 0; i < NB_GEN_NODES / 2; i++)
+		extracted_min_nodes[i] = extractMinFromFiboHeap(fibo_heap);
+
+	printProgressMessage("[The extracted nodes are the following]\n");
+
+	for (int i = 0; i < NB_GEN_NODES / 2; i++)
+		printNodesInfo(extracted_min_nodes, NB_GEN_NODES / 2);
+
+	printfFiboHeapInfo(fibo_heap);
+
 	//---------- Cleaning ----------
 
 	printf("\n");
@@ -89,7 +154,10 @@ void mainTest_1 ()
 
 int main ()
 {
-	mainTest_1();
+	srand(time(0));
+
+	// mainTest_1();
+	mainTest_2();
 
 	return 0;
 }

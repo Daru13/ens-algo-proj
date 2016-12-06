@@ -65,8 +65,9 @@ void mergeNodeLists (Node* source, Node* destination);
 void insertNodeAsChild (Node* child, Node* father);
 
 void insertSingleRootInFiboHeap (FiboHeap* fibo_heap, Node* node);
-Node* getMinimumElement (const FiboHeap* fibo_heap);
+void setSubHeapAsRoot (FiboHeap* fibo_heap, Node* sub_root);
 void linkRootNodes (Node* child, Node* father);
 void consolidateFiboHeap (FiboHeap* fibo_heap);
+Node* extractMinFromFiboHeap (FiboHeap* fibo_heap);
 
 #endif

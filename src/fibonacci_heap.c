@@ -206,6 +206,8 @@ void extractNodeFromList (Node* node)
 {	
 	if (hasFather(node))
 	{
+		printf("ExtractNode: father found!\n");
+
 		// If the node has a father, it must be updated
 		(node->father->degree)--;
 
@@ -217,12 +219,14 @@ void extractNodeFromList (Node* node)
 	
 	if (hasSibling(node))
 	{
+		printf("ExtractNode: sibling found!\n");
+
 		// Immediate siblings must be updated
 		node->next->previous = node->previous;
 		node->previous->next = node->next;
 
 		// The node becomes a single-element CDLL
-		// (If the node has no sibling, it must alreayd be the case)
+		// (If the node has no sibling, it must already be the case)
 		node->next 		= node;
 		node->previous 	= node;
 	}
@@ -256,6 +260,9 @@ void insertNodeAsChild (Node* child, Node* father)
 		father->child = child;
 	else
 		mergeNodeLists(child, father->child);
+
+	// Set the father of the new child
+	child->father = father;
 
 	// Increase the degree of the father
 	(father->degree)++;
@@ -459,7 +466,7 @@ Node* extractMinFromFiboHeap (FiboHeap* fibo_heap)
 	if (min_element == NULL)
 		return NULL;
 
-	printf("> Min element exists\n");
+	printf(">>>> Min element exists\n");
 	printFiboHeap(fibo_heap);
 
 	// If it exists, all its children (if any) become new roots of the heap
@@ -482,27 +489,35 @@ Node* extractMinFromFiboHeap (FiboHeap* fibo_heap)
 			// Get the next child first...
 			next_child = current_child->next;
 
+			printf("Avant extraction, noeud parent (%d) : %d fils\n",
+				current_child->value, min_element->degree);
+
 			// ...then extract the current child from the minimum's children...
 			extractNodeFromList(current_child);
-			printf("> Current extracted child: %x\n", (int) current_child);
 
 			// ...and finally insert it as a new root
 			setSubHeapAsRoot(fibo_heap, current_child);
 
-			current_child = next_child;
+			printf("Après extract/réinsertion, noeud parent : %d fils\n",
+				min_element->degree);
+			printFiboHeap(fibo_heap);
+/*
+			//extractNodeFromList(current_child);
+			printf("Après extraction, noeud parent (%x) : %d fils\n", (int) min_element, min_element->degree);
+			printf("Parent noeud actuel : %x\n", (int) current_child->father);
+
+			printf("cur : %x ; next : %x\n", (int) current_child, (int) next_child);
+*/			current_child = next_child;
 		}
-		while (next_child != min_element->child);
+		while (min_element->degree > 0);
 	}
 
+	printf(">>>> Avant extraction min\n");
 	printFiboHeap(fibo_heap);
 
 	// The minimum node is extracted from the list of heaps
 	Node* min_element_next = min_element->next;
 	extractNodeFromList(min_element);
-
-	// The degree and the total number of nodes of the heap are both decreased
-	(fibo_heap->degree)--;
-	(fibo_heap->nb_nodes)--;
 
 	// If the Fibonacci heap only had one root, its new minimum is NULL
 	if (min_element_next == min_element) {
@@ -518,6 +533,13 @@ Node* extractMinFromFiboHeap (FiboHeap* fibo_heap)
 		fibo_heap->min_element = min_element_next;
 		consolidateFiboHeap(fibo_heap);
 	}
+
+	// The degree and the total number of nodes of the heap are both decreased
+	(fibo_heap->degree)--;
+	(fibo_heap->nb_nodes)--;
+
+	printf(">>>> Après extraction min\n");
+	printFiboHeap(fibo_heap);
 
 	return min_element;
 }

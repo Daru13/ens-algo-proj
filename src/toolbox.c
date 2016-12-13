@@ -5,6 +5,7 @@
 //------------------------------------------------------------------------------
 
 #include <stdio.h>
+#include "fibonacci_heap.h"
 
 // Terminal's display formatting strings
 #define TERM_NORMAL_FORMAT 	"\x1B[0m"

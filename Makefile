@@ -20,7 +20,7 @@ build/fibonacci_heap.o: src/fibonacci_heap.c src/fibonacci_heap.h src/toolbox.h
 
 fibonacci_heap.h: src/toolbox.h
 
-build/toolbox.o: src/toolbox.c src/toolbox.h
+build/toolbox.o: src/toolbox.c src/toolbox.h 
 	$(CC) $(CCFLAGS) -c src/toolbox.c -o build/toolbox.o
 
 # Cleaning rule(s)

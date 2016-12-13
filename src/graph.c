@@ -133,7 +133,6 @@ bool IsConnexe (node graph[], int n) // O(#A) where G=(S,A)
 	return res;
 }
 
-
 int* DijKstraNaif (node Graph[] ,int n ,int s) // O(#A²)
 {
 	int res[n];

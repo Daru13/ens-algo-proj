@@ -5,13 +5,20 @@
 
 // First : chained list
 
-typedef struct List List; 
+typedef struct ListElt ListElt; 
+struct ListElt
+{
+	int val;
+	// we use a pointor it recognize the empty List
+	ListElt* next;
+}; 
+
+typedef struct List List;
 struct List
 {
-	int* val;
-	// we use a pointerr ito recognize the empty List
-	List* next;
-} ; 
+	ListELt* first;
+};
+
 
 // Priority List
 
@@ -23,38 +30,58 @@ struct Prio
 	int key;
 };
 
-typedef struct PrioList PrioList;
-struct PrioList
+typedef struct PrioListElt PrioListElt;
+struct PrioListElt
 {
 	Prio* val;
-	PrioList* next;
+	PrioListElt* next;
 
 };
 
+typedef struct PrioList PrioList;
+struct PrioList
+{
+	PrioListElt* first;
+};
 
 // Then : Graph
 
 
-typedef struct edge edge;
-struct edge 
+typedef struct Edge Edge;
+struct Edge 
 {
 	int linked;
 	int dist;
 };
 
+typedef struct EListElt EListElt;
+struct EListElt
+{
+	Edge* val;
+	EListElt* next;
+};
+
 typedef struct EList EList;
 struct EList
 {
-	edge* val;
-	EList* next;
+	EListElt* first;
 };
 
-typedef struct node node;
-struct node
+
+typedef struct Vertex Vertex;
+struct Vertex
 {
 	int val_node ;
 	EList* links ;
-} ;
+};
+
+typedef struct Graph Graph;
+struct Graph 
+{
+	vertex* edges;
+	int CardV;
+};
+
 
 // Finally : a graph is an array of node :
 // graph[n] = node ; such as node.val_node = n

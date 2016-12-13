@@ -4,83 +4,72 @@
 
 
 // First : chained list
-
-typedef struct ListElt ListElt; 
-struct ListElt
+ 
+typedef struct ListElt 
 {
 	int val;
-	// we use a pointor it recognize the empty List
-	ListElt* next;
-}; 
+	struct ListElt* next;
+}ListElt; 
 
-typedef struct List List;
-struct List
+typedef struct List
 {
-	ListELt* first;
-};
+	struct ListELt* first;
+}List;
 
 
 // Priority List
 
 
-typedef struct Prio Prio;
-struct Prio
+typedef struct Prio
 {
 	int elt;
 	int key;
-};
+}Prio;
 
-typedef struct PrioListElt PrioListElt;
-struct PrioListElt
+typedef struct PrioListElt
 {
-	Prio* val;
-	PrioListElt* next;
+	struct Prio* val;
+	struct PrioListElt* next;
 
-};
+}PrioListElt;
 
-typedef struct PrioList PrioList;
-struct PrioList
+typedef struct PrioList
 {
-	PrioListElt* first;
-};
+	struct PrioListElt* first;
+}PrioList;
 
 // Then : Graph
 
 
-typedef struct Edge Edge;
-struct Edge 
+typedef struct Edge
 {
 	int linked;
 	int dist;
-};
+}Edge;
 
-typedef struct EListElt EListElt;
-struct EListElt
+typedef struct EListElt
 {
-	Edge* val;
-	EListElt* next;
-};
+	struct Edge* val;
+	struct EListElt* next;
+}EListElt;
 
-typedef struct EList EList;
-struct EList
+typedef struct EList
 {
-	EListElt* first;
-};
+	struct EListElt* first;
+}EList ;
 
 
-typedef struct Vertex Vertex;
-struct Vertex
+typedef struct Vertex
 {
 	int val_node ;
-	EList* links ;
-};
+	struct EList* links ;
+}Vertex;
 
-typedef struct Graph Graph;
-struct Graph 
+typedef struct Graph
 {
-	vertex* edges;
+	struct Vertex* edges;
 	int CardV;
-};
+}Graph;
 
 
 // Finally : a graph is an array of node :

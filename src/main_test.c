@@ -108,9 +108,9 @@ void mainTest_2 ()
 	// Many nodes are created, the inserted in an empty Fibonacci heap
 	// Their values are randomly selected in a small range (to force collisions)
 
-	#define NB_GEN_NODES 64
+	#define NB_GEN_NODES 10
 	#define MIN_VALUE 0
-	#define MAX_VALUE 25
+	#define MAX_VALUE 20
 
 	printProgressMessage("[Nodes with random values are created]\n");
 	printf("%d nodes created, values ranging from %d to %d\n",

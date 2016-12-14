@@ -372,6 +372,7 @@ void linkRootNodes (FiboHeap* fibo_heap, Node* child, Node* father)
 	child->is_tagged = false;
 }
 
+/*
 // Consolidate a Fibonacci heap, i.e. force all the roots of the heaps to have
 // different degrees by rearranging the structure of the Fibonacci heap
 void consolidateFiboHeap (FiboHeap* fibo_heap)
@@ -466,6 +467,95 @@ void consolidateFiboHeap (FiboHeap* fibo_heap)
 			// ||  node_has_become_child);
 	}
 
+	fibo_heap->min_element = NULL;
+	fibo_heap->degree = 0;
+
+	for (unsigned int i = 0; i <= fibo_heap->nb_nodes; i++)
+		if (roots_of_degree[i] == NULL)
+		{
+			setSubHeapAsRoot(fibo_heap, roots_of_degree[i]);
+			if (fibo_heap->min_element == NULL
+			||  fibo_heap->min_element->value > roots_of_degree[i]->value)
+				fibo_heap->min_element = roots_of_degree[i];
+		}
+
+	// Finally, the minimum element is updated
+	//fibo_heap->min_element = min_element;
+	for (unsigned int i = 0; i <= fibo_heap->degree; i++)
+	{
+		if (roots_of_degree[i] == NULL) continue;
+		if (fibo_heap->min_element->value > roots_of_degree[i]->value)
+				fibo_heap->min_element = roots_of_degree[i];
+	}
+
+	// free(roots_of_degree);
+}
+*/
+
+// Consolidate a Fibonacci heap, i.e. force all the roots of the heaps to have
+// different degrees by rearranging the structure of the Fibonacci heap
+void consolidateFiboHeap (FiboHeap* fibo_heap)
+{
+	// If the Fibonacci heap is empty, nothing has to be done
+	if (fibo_heap->min_element == NULL)
+		return;
+
+	// Create and init an array of nodes indexed on degrees
+	Node* roots_of_degree[fibo_heap->nb_nodes];
+	for (unsigned int i = 0; i <= fibo_heap->nb_nodes; i++)
+		roots_of_degree[i] = NULL;
+
+	Node* start_node   = fibo_heap->min_element;
+	Node* current_node = start_node;
+	Node* next_node;
+
+	if (start_node != NULL)
+	{
+		do
+		{
+			printf("*** début de la consolidation ***\n");
+			unsigned int current_degree = current_node->degree;
+			next_node = current_node->next;
+
+			while (roots_of_degree[current_degree] != NULL)
+			{
+				printf("Màj tableau par degré avec noeud courant = %x (%d))\n",
+					(int) current_node, current_node->value);
+
+				Node* current_deg_root = roots_of_degree[current_degree];
+
+				// The node with the highest value becomes the child of the other one
+				if (current_node->value > current_deg_root->value)
+				{
+					Node* current_node_copy = current_node;
+					current_node 			= current_deg_root;
+					current_deg_root 		= current_node_copy;
+				}
+				
+				//if (start_node == current_deg_root)
+				//		start_node = current_node;
+
+				// "Link" the two nodes together, in the right order
+				linkRootNodes(fibo_heap, current_deg_root, current_node);
+
+				// Re-init the single root associated to the current degree
+				// (since it just has been increased by "linking")
+				roots_of_degree[current_degree] = NULL;
+
+				current_degree++;
+			}
+
+			// Set current_node as the only node of current_degree
+			roots_of_degree[current_degree] = current_node;
+
+			// current_node_ref = current_node_ref->next;
+			//printf("******** VALEUR NEXT CURRENT NODE : %x\n", current_node->next);
+			current_node = next_node;
+
+		} while (current_node != start_node);
+	}
+
+	// The Fibonacci heap is reconstructed
 	fibo_heap->min_element = NULL;
 	fibo_heap->degree = 0;
 

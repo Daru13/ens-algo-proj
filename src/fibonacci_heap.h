@@ -6,6 +6,7 @@
 #define _FIBONACCI_HEAPS_H_
 
 #include "toolbox.h"
+#include <stdbool.h>
 
 // Type of the value of a node of the Fibonacci heap
 typedef int NodeValue;

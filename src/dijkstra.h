@@ -1,15 +1,14 @@
 //------------------------------------------------------------------------------
-// TOOLBOX
+// DIJKSTRA
 //------------------------------------------------------------------------------
 
-#ifndef _TOOLBOX_H
-#define _TOOLBOX_H
+#ifndef _DIJKSTRA_H
+#define _DIJKSTRA_H
 
-// Macro to check the correct execution of a malloc() call
-#define CHECK_MALLOC(ptr) assert(ptr != NULL);
+#include "graph.h"
 
 //------------------------------------------------------------------------------
 
-void printProgressMessage (char* const message);
+
 
 #endif

@@ -1,140 +1,121 @@
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-//            Usual fonctions graph
-//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//------------------------------------------------------------------------------
+// GRAPH
+//------------------------------------------------------------------------------
+// Implementation of a graph structure
+// Includes reading from file + checking connectivity.
+//------------------------------------------------------------------------------
 
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include "list.h"
+#include "toolbox.h"
 #include "graph.h"
 
-// First : Fonctions for List
+//------------------------------------------------------------------------------
+// BASIC OPERATIONS
+//------------------------------------------------------------------------------
 
-List* createList () // O(1)
+Edge* createEdge (int origin, int destination, int weight, Edge* next)
 {
-	List* res = malloc(sizeof(List));
-	res->first = NULL;
-	return res;
+	Edge* new_edge = malloc(sizeof(Edge));
+	CHECK_MALLOC(new_edge);
+
+	new_edge->origin 	  = origin;
+	new_edge->destination = destination;
+	new_edge->weight 	  = weight;
+	new_edge->next 		  = next;
+
+	return new_edge;
 }
 
-bool isEmptyList (List* L) // O(1)
-//the empty List is List with first = NULL
+Graph* createEmptyGraph (int nb_vertexes)
 {
-	return (L->first == NULL);
+	Graph* new_graph = malloc(sizeof(Graph));
+	CHECK_MALLOC(new_graph);
+
+	new_graph->nb_vertexes = nb_vertexes;
+	
+	new_graph->edges = malloc(nb_vertexes * sizeof(Edge*));
+	for (int i = 0; i < nb_vertexes; i++)
+		new_graph->edges[i] = NULL;
+
+	return new_graph;
 }
 
-
-void addElt (List* L,int x) // O(1)
+void addUndirectedEdgeToGraph (Graph* graph, int origin, int destination, int weight)
 {
-	ListElt* new_first = malloc(sizeof(ListElt));
-	new_first->val = x;
-	new_first->next = L->first;
-	L->first = &new_first;
+	// Add an edge from the origin to the destination
+	Edge* current_source_edge = graph->edges[origin];
+
+	Edge* new_source_edge = createEdge(origin, destination, weight, current_source_edge);
+	graph->edges[origin] = new_source_edge;
+
+	// Add an edge from the destination to the origin
+	Edge* current_destination_edge 	= graph->edges[destination];
+	
+	Edge* new_destination_edge = createEdge(destination, origin, weight, current_destination_edge);
+	graph->edges[destination] = new_destination_edge;
 }
 
-int popList (List* L) // O(1)
+Graph* createGraphFromFile (FILE* file)
 {
-	ListElt* elt = L->first;
-	(L->first) = (elt->next);
-	return elt->val;
-}
+	// The first line contains:
+	// - the number of vertexes
+	// - the number of edges
+	int nb_vertexes, nb_edges;
 
-void ConcatList (List* L1 , List* L2) // O(|L2|) 
-{
-	while ( !( isEmptyList (L2)))
+	int nb_var_read = fscanf(file, "%d %d", &nb_vertexes, &nb_edges);
+	if (nb_var_read != 2)
 	{
-		int elt = popList(L2);
-		addElt(L1 , elt);
+		fprintf(stderr, "Error: graph file has a bad syntax.\n");
+		exit(1);
 	}
-}
 
-// Then : Functions for PrioList i.e. Dump prioririty structures
+	// Create an empty graph of nb_vertexes vertexes
+	Graph* new_graph = createEmptyGraph(nb_vertexes);
 
-PrioList* createPrioList () // O(1)
-{
-	PrioList* res = malloc(sizeof(PrioList));
-	res->first = NULL;
-	return res;
-}
+	// Then, there are nb_edges lines. Each line contains :
+	// - an origin
+	// - a destination
+	// - the weight of the edge
+	int origin, destination, weight;
 
-bool isEmptyPrioList (PrioList* P) // O(1)
-{
-	return (P->first == NULL);
-}
-
-
-void addPrioList (PrioList* P, Prio x ) // O(1)
-{
-	PrioListElt* new_elt = malloc(sizeof(PrioListElt));
-	new_elt->val = &x;
-	new_elt->next = P->first;
-	P->first = new_elt;
-}
-
-
-Prio extractMin (PrioList* P) // O(|P|)
-{
-	PrioListElt* min = malloc(sizeof(PrioListElt));
-	min = P->first;
-	P->first = min->next;
-	if (isEmptyPrioList( P))
+	for (int line = 0; line < nb_edges; line++)
 	{
-		return *min->val;
-	}
-	else
-	{
-		Prio min2 = extractMin(P);
-		if (min2.key <= min->val->key)
+		nb_var_read = fscanf(file, "%d %d %d", &origin, &destination, &weight);
+		if (nb_var_read != 3)
 		{
-			addPrioList (P,min2);
-			return *min->val;
+			fprintf(stderr, "Error: graph file has a bad syntax.\n");
+			exit(1);
 		}
-		else
-		{
-			addPrioList (P, *min->val);
-			return min2;
-		}
+
+		// Add the edges (both ways) to the graph
+		addUndirectedEdgeToGraph(new_graph, origin, destination, weight);
 	}
+
+	return new_graph;
 }
 
+//------------------------------------------------------------------------------
+// GRAPH CONNECTIVITY
+//------------------------------------------------------------------------------
 
-// Functions for EdgeList
-
-bool EListIsEmpty (EList* EL)
-{
-	return (EL->first == NULL);
-}
-
-Edge popEList (EList* EL)
-{
-	EListElt* elt = EL->first;
-	EL->first = elt->next;
-	return *elt->val;
-}
-
-void addEList (EList* EL, Edge ed)
-{
-	EListElt* new_elt = malloc(sizeof(EListElt));
-	new_elt-> val = &ed;
-	new_elt->next = EL->first;
-	EL->first = new_elt;
-}
-
-
-// Then : Functions for Graph
-
-bool isConnexe (Graph g ) // O(#A) where G=(S,A)
+/*
+bool graphIsConnected (Graph* graph)
 {
 	List* waiting = createList();
-	addElt ( waiting , 0);
+	addElementToList(waiting, 0);
+
 	bool seen[g.CardV];
 	for (int i = 0 ; i < g.CardV ; i++)
 	{
-		seen[i]= false;
+		seen[i] = false;
 	}
-	while ( !(isEmptyList (waiting) ) )
+	while (! listIsEmpty(waiting))
 	{
-		int nd = popList(waiting) ;
+		int nd = popFromList(waiting) ;
 		if ( !seen[nd])
 		{
 			seen[nd] = true;
@@ -142,11 +123,12 @@ bool isConnexe (Graph g ) // O(#A) where G=(S,A)
 			while ( !(EListIsEmpty (EL)))
 			{
 				Edge edge = popEList(EL);
-				addElt (waiting, edge.linked);
+				addElementToList (waiting, edge.linked);
 			}
 
 		}
 	}
+
 	bool res = true;
 	for (int i=0; i<g.CardV ; i++)
 	{
@@ -154,76 +136,4 @@ bool isConnexe (Graph g ) // O(#A) where G=(S,A)
 	}
 	return res;
 }
-
-int* dijkstraNaif (Graph g ,int s) // O(#A²)
-{
-	int res[g.CardV];
-	bool seen[g.CardV];
-	for (int i = 0 ; i < g.CardV ; i++)
-	{
-		seen[i]= false;
-	}
-	PrioList* F = createPrioList();
-	Prio p = { s , 0};
-	addPrioList (F , p);
-	while ( ! (isEmptyPrioList(F)))
-	{
-		Prio x = extractMin(F);
-		if ( !seen[x.elt] )
-		{
-			int n = x.elt;
-			res[n] = x.key;
-			seen[n] = true;
-			EList* EL = (g.edges[n]).links;
-			while (! EListIsEmpty(EL))
-			{
-				Edge ed = popEList(EL);
-				Prio p = {ed.linked , res[n] + ed.dist};
-				addPrioList(F,p);
-			}
-		}
-	}
-	return res;
-}
-
-
-
-int main(int argc, char *argv[])
-{
-	int cardV, cardE;
-	scanf("%d %d", &cardV, &cardE);
-	Graph g;
-	g.CardV = cardV;
-	g.edges = malloc(cardV*sizeof(Vertex));
-	for (int i = 0; i <g.CardV; i++)
-	{
-		(g.edges[i]).val_node = 1;
-		(g.edges[i]).links = NULL;
-	}
-	for (int i = 0; i < cardE; i++)
-	{
-		int x, y, d;
-		scanf ("%d %d %d", &x, &y, &d);
-		Edge* edge_x = malloc(sizeof(Edge));
-		Edge* edge_y = malloc(sizeof(Edge));
-		edge_x->linked = y;
-		edge_y->linked = x;
-		edge_x->dist = d;
-		edge_x->dist = d;
-		addEList((g.edges[x]).links,*edge_x);
-		addEList((g.edges[y]).links,*edge_y);
-	}
-	if (isConnexe(g))
-	{
-		int* res = dijkstraNaif(g,0);
-		for (int i= 0; i < cardV; i++)
-		{
-			printf("%d : %d",i ,res[i]);
-		}
-	}	
-	free(g.edges);
-	return 0;
-}
-
-
-
+*/

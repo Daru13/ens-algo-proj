@@ -11,6 +11,8 @@
 #include "toolbox.h"
 #include "fibonacci_heap.h"
 #include "main_test.h"
+#include "graph.h"
+#include "dijkstra.h"
 
 //------------------------------------------------------------------------------
 
@@ -153,6 +155,9 @@ void mainTest_2 ()
 	printfFiboHeapInfo(fibo_heap);
 	printFiboHeap(fibo_heap);
 
+
+
+
 	//---------- Cleaning ----------
 
 	printf("\n");
@@ -161,12 +166,37 @@ void mainTest_2 ()
 	freeFiboHeap(fibo_heap);
 }
 
+
+	//Test  3
+
+void mainTest3()
+{
+	Graph* g = createGraphFromFile(stdin);
+	if(graphIsConnected(g))
+	{
+		fprintf(stderr,"Ok");
+		int* res= dijkstraNaif(g,0);
+		for (int i= 0; i<g->nb_elements; i++)
+		{
+			fprintf(stderr,"la distance de %d à %d est %d ", s, i, res[i]);
+		}
+	}
+	else
+	{
+		fprintf(stderr,"Le graphe n'est pas connexe");
+	}
+}
+
+
+
+
+
 int main ()
 {
 	srand(time(0));
 
 	// mainTest_1();
-	mainTest_2();
+	mainTest3();
 
 	return 0;
 }

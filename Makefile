@@ -1,6 +1,6 @@
 # DIJKSTRA WITH FIBONACCI HEAPS - 2016 Programming course project
 # Some compiling-related parameters
-CC = clang
+CC = gcc
 CCFLAGS = -g -W -Wall -pedantic -std=c99
 
 ##### THIS LIST MUST BE UPDATED #####
@@ -13,17 +13,17 @@ all: build/main_test
 build/main_test: src/main_test.c src/main_test.h $(OBJS)
 	$(CC) $(CCFLAGS) $(OBJS) src/main_test.c -o build/main_test 
 
-main_test.h: src/fibonacci_heap.h
+src/main_test.h: src/fibonacci_heap.h
 
-build/dijkstra.o: src/dijkstra.c src/dijkstra.h src/toolbox.h
+build/dijkstra.o: src/dijkstra.c src/dijkstra.h src/toolbox.h src/list.h src/graph.h
 	$(CC) $(CCFLAGS) -c src/dijkstra.c -o build/dijkstra.o
 
-dijkstra.h: graph.h
+src/dijkstra.h: src/graph.h 
 
 build/fibonacci_heap.o: src/fibonacci_heap.c src/fibonacci_heap.h src/toolbox.h
 	$(CC) $(CCFLAGS) -c src/fibonacci_heap.c -o build/fibonacci_heap.o
 
-fibonacci_heap.h: src/toolbox.h
+src/fibonacci_heap.h: src/toolbox.h
 
 build/graph.o: src/graph.c src/graph.h src/list.h src/toolbox.h
 	$(CC) $(CCFLAGS) -c src/graph.c -o build/graph.o

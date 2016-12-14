@@ -13,6 +13,8 @@
 #include "toolbox.h"
 #include "graph.h"
 
+
+
 //------------------------------------------------------------------------------
 // BASIC OPERATIONS
 //------------------------------------------------------------------------------
@@ -55,7 +57,8 @@ void addUndirectedEdgeToGraph (Graph* graph, int origin, int destination, int we
 	// Add an edge from the destination to the origin
 	Edge* current_destination_edge 	= graph->edges[destination];
 	
-	Edge* new_destination_edge = createEdge(destination, origin, weight, current_destination_edge);
+	Edge* new_destination_edge = 
+			createEdge(destination, origin, weight, current_destination_edge);
 	graph->edges[destination] = new_destination_edge;
 }
 
@@ -101,14 +104,14 @@ Graph* createGraphFromFile (FILE* file)
 //------------------------------------------------------------------------------
 // GRAPH CONNECTIVITY
 //------------------------------------------------------------------------------
-/*
-bool graphIsConnected (Graph* graph)
+
+bool graphIsConnected (Graph* g)
 {
 	List* waiting = createList();
 	addElementToList(waiting, 0);
 
-	bool seen[g.CardV];
-	for (int i = 0 ; i < g.CardV ; i++)
+	bool seen[g->nb_vertexes];
+	for (int i = 0 ; i < g->nb_vertexes; i++)
 	{
 		seen[i] = false;
 	}
@@ -118,21 +121,43 @@ bool graphIsConnected (Graph* graph)
 		if ( !seen[nd])
 		{
 			seen[nd] = true;
-			EList* EL = (g.edges[nd]).links;
-			while ( !(EListIsEmpty (EL)))
+			Edge* EL = g->edges[nd];
+			while ( EL != NULL)
 			{
-				Edge edge = popEList(EL);
-				addElementToList (waiting, edge.linked);
+				addElementToList (waiting, EL->destination);
+				EL = EL->next;
 			}
 
 		}
 	}
 
 	bool res = true;
-	for (int i=0; i<g.CardV ; i++)
+	for (int i=0; i<g->nb_vertexes ; i++)
 	{
 		res = res && (seen[i]);
 	}
 	return res;
 }
-*/
+
+int main()
+{
+	Graph* g = createGraphFromFile(stdin);
+	if(graphIsConnected(g))
+	{
+		fprintf(stderr,"Ok");
+		int* res= dijkstraNaif(g,0);
+		for (int i= 0; i<g->nb_elements; i++)
+		{
+			fprintf(stderr,"la distance de %d à %d est %d ", s, i, res[i]);
+		}
+	}
+	else
+	{
+		fprintf(stderr,"Le graphe n'est pas connexe");
+	}
+	return 0;
+		
+}
+
+
+

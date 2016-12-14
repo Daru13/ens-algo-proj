@@ -64,6 +64,7 @@ void concatTwoLists (List* L1 , List* L2) // O(|L2|)
 // Basic (linked) priority list
 //------------------------------------------------------------------------------
 
+/*
 PrioList* createPrioList () // O(1)
 {
 	PrioList* res = malloc(sizeof(PrioList));
@@ -114,3 +115,4 @@ Prio extractMinFromPrioList (PrioList* P) // O(|P|)
 		}
 	}
 }
+*/

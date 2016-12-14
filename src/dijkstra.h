@@ -9,6 +9,6 @@
 
 //------------------------------------------------------------------------------
 
-int* dijkstraNaif(Graph*,int);
+int* dijkstraNaive(Graph*,int);
 
 #endif

@@ -2,6 +2,9 @@
 // GRAPH
 //------------------------------------------------------------------------------
 
+#ifndef _GRAPH_H
+#define _GRAPH_H
+
 typedef struct Edge
 {
 	int origin;
@@ -23,3 +26,5 @@ Graph* createEmptyGraph (int nb_vertexes);
 void addUndirectedEdgeToGraph (Graph* graph, int source, int destination, int weight);
 Graph* createGraphFromFile (FILE* file);
 bool graphIsConnected (Graph* graph);
+
+#endif

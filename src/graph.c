@@ -138,26 +138,3 @@ bool graphIsConnected (Graph* g)
 	}
 	return res;
 }
-
-int main()
-{
-	Graph* g = createGraphFromFile(stdin);
-	if(graphIsConnected(g))
-	{
-		fprintf(stderr,"Ok");
-		int* res= dijkstraNaif(g,0);
-		for (int i= 0; i<g->nb_elements; i++)
-		{
-			fprintf(stderr,"la distance de %d à %d est %d ", s, i, res[i]);
-		}
-	}
-	else
-	{
-		fprintf(stderr,"Le graphe n'est pas connexe");
-	}
-	return 0;
-		
-}
-
-
-

@@ -155,9 +155,6 @@ void mainTest_2 ()
 	printfFiboHeapInfo(fibo_heap);
 	printFiboHeap(fibo_heap);
 
-
-
-
 	//---------- Cleaning ----------
 
 	printf("\n");
@@ -166,37 +163,33 @@ void mainTest_2 ()
 	freeFiboHeap(fibo_heap);
 }
 
-
-	//Test  3
-
-void mainTest3()
+void mainTest_3 ()
 {
+	printProgressMessage("[Enter a graph (in the right format)]\n");
 	Graph* g = createGraphFromFile(stdin);
-	if(graphIsConnected(g))
+
+	if (graphIsConnected(g))
 	{
-		fprintf(stderr,"Ok");
-		int* res= dijkstraNaif(g,0);
-		for (int i= 0; i<g->nb_elements; i++)
-		{
-			fprintf(stderr,"la distance de %d à %d est %d ", s, i, res[i]);
-		}
+		printProgressMessage("[The graph is connected]\n");
+
+		int origin = 0;
+		printProgressMessage("[Distances from vertice 0]\n");
+
+		int* res= dijkstraNaive(g, origin);
+		for (int i = 0; i < g->nb_vertexes; i++)
+			printf("Distance from %d to %d is: %d ", origin, i, res[i]);
 	}
 	else
-	{
-		fprintf(stderr,"Le graphe n'est pas connexe");
-	}
+		printProgressMessage("[The graph is *NOT* connected]\n");
 }
-
-
-
-
 
 int main ()
 {
 	srand(time(0));
 
 	// mainTest_1();
-	mainTest3();
+	// mainTest_2();
+	mainTest_3();
 
 	return 0;
 }

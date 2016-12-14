@@ -20,11 +20,12 @@ typedef struct List
 } List;
 
 // Priority List
-typedef struct Prio
+/*
+typedef struct Priority
 {
 	int elt;
 	int key;
-} Prio;
+} Priority;
 
 typedef struct PrioListElt
 {
@@ -37,18 +38,21 @@ typedef struct PrioList
 {
 	PrioListElt* first;
 } PrioList;
+*/
 
 //------------------------------------------------------------------------------
 
 List* createList ();
 bool listIsEmpty (List* L);
-void addElementToList (List* L,int x);
+void addElementToList (List* L, int x);
 int popFromList (List* L);
 void concatTwoLists (List* L1 , List* L2);
 
+/*
 PrioList* createPrioList ();
 bool prioListIsEmpty (PrioList* P);
 void addElementToPrioList (PrioList* P, Prio x );
 Prio extractMinFromPrioList (PrioList* P);
+*/
 
 #endif

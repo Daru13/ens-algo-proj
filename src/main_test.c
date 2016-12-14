@@ -110,7 +110,7 @@ void mainTest_2 ()
 
 	#define NB_GEN_NODES 10
 	#define MIN_VALUE 0
-	#define MAX_VALUE 20
+	#define MAX_VALUE 5
 
 	printProgressMessage("[Nodes with random values are created]\n");
 	printf("%d nodes created, values ranging from %d to %d\n",
@@ -120,8 +120,7 @@ void mainTest_2 ()
 	for (int i = 0; i < NB_GEN_NODES; i++)
 	{
 		int random_value = rand() % (MAX_VALUE - MIN_VALUE + 1) + MIN_VALUE;
-		// Debug :
-		random_value = i;
+		random_value = i; // DEBUG
 		generated_nodes[i] = createIsolatedNode(random_value);
 	}
 

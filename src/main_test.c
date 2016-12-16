@@ -14,8 +14,18 @@
 #include "graph.h"
 #include "dijkstra.h"
 
+// Random nodes generation parameters
+#define NB_GEN_NODES 8
+
+#define MIN_NODE_VALUE 0
+#define MAX_NODE_VALUE 10
+
+#define MIN_NODE_KEY 0
+#define MAX_NODE_KEY 20
+
 //------------------------------------------------------------------------------
 
+/*
 void printNodesInfo (Node* const nodes[], const int n)
 {
 	for (int i = 0; i < n; i++)
@@ -40,60 +50,42 @@ void printfFiboHeapInfo (FiboHeap* const fibo_heap)
 	printf("Value of its minimum element: %d\n",
 			fibo_heap_min_element != NULL ? fibo_heap_min_element->value : -1);
 }
+*/
 
-void mainTest_1 ()
+Node** generateFixedNodesArray (int nb_nodes)
+{
+	Node* generated_nodes = malloc(nb_nodes * sizeof(Node*));
+	CHECK_MALLOC(generated_nodes);
+
+	for (int i = 0; i < nb_nodes; i++)
+		generated_nodes[i] = createIsolatedNode(i, i);
+	
+	return generated_nodes;
+}
+
+Node** generateRandomNodesArray (int nb_nodes)
+{
+	Node* generated_nodes = malloc(nb_nodes * sizeof(Node*));
+	CHECK_MALLOC(generated_nodes);
+
+	for (int i = 0; i < nb_nodes; i++)
+	{
+		int random_value = rand() % (MAX_NODE_VALUE - MIN_NODE_VALUE + 1) + MIN_NODE_VALUE;
+		int random_key   = rand() % (MAX_NODE_KEY - MIN_NODE_KEY + 1) + MIN_NODE_KEY;
+
+		generated_nodes[i] = createIsolatedNode(random_value, random_key);
+	}
+
+	return generated_nodes;
+}
+
+void testNodes_1 ()
 {
 	printProgressMessage("\n--------- MAIN TEST 1 ---------\n");
 
-	//---------- Nodes of CDLLs ----------
+	//---------- Creation, insertion, extraction, deletion of nodes ----------
+
 	
-	NodeValue node_val_0 = 0;
-	NodeValue node_val_1 = 42;
-	NodeValue node_val_2 = -128;
-
-	printProgressMessage("[3 nodes are created]\n");
-	Node* nodes[3];
-	nodes[0] = createIsolatedNode(node_val_0);
-	nodes[1] = createIsolatedNode(node_val_1);
-	nodes[2] = createIsolatedNode(node_val_2);
-
-	printNodesInfo(nodes, 3);
-
-	printProgressMessage("[Nodes 0, 1 and 2 are merged]\n");
-	mergeNodeLists(nodes[0], nodes[1]);
-	mergeNodeLists(nodes[0], nodes[2]);
-
-	printNodesInfo(nodes, 3);
-
-	printProgressMessage("[Node 1 is extracted]\n");
-	extractNodeFromList(nodes[1]);
-
-	printNodesInfo(nodes, 3);
-
-	//---------- Fibonacci heap ----------
-
-	printf("\n");
-
-	printProgressMessage("[A Fibonacci heap is created]\n");
-	FiboHeap* fibo_heap = createFiboHeap();
-
-	printProgressMessage("[Node 1 is inserted in the Fibonacci heap]\n");
-	insertSingleRootInFiboHeap(fibo_heap, nodes[1]);
-
-	printfFiboHeapInfo(fibo_heap);
-
-	printProgressMessage("[Node 2 is extracted, then inserted in the Fibonacci heap]\n");
-	extractNodeFromList(nodes[2]);
-	insertSingleRootInFiboHeap(fibo_heap, nodes[2]);
-
-	printNodesInfo(nodes, 3);
-	printfFiboHeapInfo(fibo_heap);
-
-	printProgressMessage("[Extracting minimum value, two times]\n");
-	Node* min_node_1 =  extractMinFromFiboHeap(fibo_heap);
-	Node* min_node_2 =  extractMinFromFiboHeap(fibo_heap);
-	printf("Extracted values are %d and %d\n", min_node_1->value, min_node_2->value);
-	printfFiboHeapInfo(fibo_heap);
 
 	//---------- Cleaning ----------
 
@@ -109,10 +101,6 @@ void mainTest_2 ()
 
 	// Many nodes are created, the inserted in an empty Fibonacci heap
 	// Their values are randomly selected in a small range (to force collisions)
-
-	#define NB_GEN_NODES 10
-	#define MIN_VALUE 0
-	#define MAX_VALUE 5
 
 	printProgressMessage("[Nodes with random values are created]\n");
 	printf("%d nodes created, values ranging from %d to %d\n",

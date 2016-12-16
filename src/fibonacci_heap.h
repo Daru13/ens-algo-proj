@@ -44,14 +44,16 @@ typedef struct FiboHeap {
 
 //------------------------------------------------------------------------------
 
-Node* createNode (const NodeValue value);
-Node* createIsolatedNode (const NodeValue value);
+Node* createNode (NodeValue value, int key);
+Node* createIsolatedNode (NodeValue value, int key);
 void freeNode (Node* node);
 void freeNodeTree (Node* root);
+void printListOfNodes (Node* node);
 
 FiboHeap* createFiboHeap ();
 void freeFiboHeap (FiboHeap* fibo_heap);
-void printFiboHeap (FiboHeap* const fibo_heap);
+void printFiboHeap (FiboHeap* fibo_heap);
+
 /*
 bool hasSibling (const Node* node);
 bool hasFather (const Node* node);
@@ -59,8 +61,10 @@ bool hasChild (const Node* node);
 unsigned int getNbNodesOfList (Node* const node);
 void printCDLL (Node* cdll_node);
 */
+
 void extractNodeFromList (Node* node);
-void mergeNodeLists (Node* source, Node* destination);
+void insertNodeInList (Node* node_to_insert, Node* destination);
+void mergeListsOfNodes (Node* to_merge, Node* destination);
 void insertNodeAsChild (Node* child, Node* father);
 
 void insertSingleRootInFiboHeap (FiboHeap* fibo_heap, Node* node);

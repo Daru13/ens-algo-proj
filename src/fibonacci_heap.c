@@ -85,16 +85,18 @@ void printListOfNodes (Node* node)
 	}
 
 	// Else, print all the values of all the nodes as well as their number
+	Node* current_node = node;
 	int nb_nodes = 0;
+
 	do
 	{
-		printf("%s(%x : %d)", nb_nodes == 0 ? "" : " - ",
-			(int) current_node, current_node->value);
+		printf("%s(%p : %d)", nb_nodes == 0 ? "" : " - ",
+			(void*) current_node, current_node->value);
 
 		current_node = current_node->next;
 		nb_nodes++;
 	}
-	while (current_node != min_element);
+	while (current_node != node);
 
 	printf(" (%d elements)\n", nb_nodes);
 }
@@ -118,7 +120,7 @@ FiboHeap* createFiboHeap ()
 void freeFiboHeap (FiboHeap* fibo_heap)
 {
 	// Free all the rooted trees, if any
-	Node* current_root = root->min_element;
+	Node* current_root = fibo_heap->min_element;
 	if (current_root != NULL)
 	{
 		// Free all the siblings of the minimum element, if any
@@ -130,7 +132,7 @@ void freeFiboHeap (FiboHeap* fibo_heap)
 
 			current_root = next_root;
 		}
-		while (current_root != root->min_element);
+		while (current_root != fibo_heap->min_element);
 	}
 
 	// Free the Fibonacci heap structure itself
@@ -226,27 +228,32 @@ void insertNodeInList (Node* node_to_insert, Node* destination)
 	node_to_insert->father = destination->father;
 }
 
-// Merge two CDLLs, by adding to_merge CDLL's nodes in the destination CDLL
+// Merge two non-NULL CDLLs, by adding to_merge CDLL's nodes in the destination CDLL
 // Both lists must be different; else, the result is undefined!
-void insertListOfNodes (Node* to_merge, Node* destination)
+void mergeListsOfNodes (Node* to_merge, Node* destination)
 {
-	/* A VERIFIER ! */
-
-	// Get the last node of each list (assuming the given nodes are the "first" ones)
-	Node* source_last_node 		= to_merge->previous;
+	// Get the last node of each list
+	// (assuming the given nodes are the "first" ones)
+	Node* to_merge_last_node 	= to_merge->previous;
 	Node* destination_last_node = destination->previous;
 
-	// Update the first and last elements of each list
-	destination->previous 	= source_last_node;
-	to_merge->previous 		= destination_last_node;
+	// Update the pointers of the first and last elements of each list
+	destination->previous = to_merge_last_node;
+	to_merge->previous 	  = destination_last_node;
 
 	destination_last_node->next = to_merge;
-	source_last_node->next 		= destination;
+	to_merge_last_node->next 	= destination;
 
 	// Update all the inserted nodes' fathers
-	
+	Node* new_father   = destination->father;
+	Node* current_node = to_merge;
 
-	return;
+	do
+	{
+		current_node->father = new_father;
+		current_node 		 = current_node->next;
+	}
+	while (current_node != to_merge_last_node);
 }
 
 // Insert a node as the child of a given node (supposed not a child of the father)
@@ -255,12 +262,12 @@ void insertNodeAsChild (Node* child, Node* father)
 {
 	// Insert the node in the CDLL
 	if (father->child == NULL)
+	{
 		father->child = child;
+		child->father = father;
+	}
 	else
-		mergeNodeLists(child, father->child);
-
-	// Set the father of the new child
-	child->father = father;
+		insertNodeInList(child, father->child);
 
 	// Increase the degree of the father
 	(father->degree)++;
@@ -279,7 +286,7 @@ void insertSingleRootInFiboHeap (FiboHeap* fibo_heap, Node* node)
 		fibo_heap->min_element = node;
 	else
 	{
-		mergeNodeLists(node, fibo_heap->min_element);
+		insertNodeInList(node, fibo_heap->min_element);
 
 		// Update the minimum element if necessary
 		NodeValue new_value = node->value;
@@ -291,8 +298,8 @@ void insertSingleRootInFiboHeap (FiboHeap* fibo_heap, Node* node)
 	(fibo_heap->degree)++;
 	(fibo_heap->nb_nodes)++;
 
-	if (node->degree > fibo_heap->max_root_degree)
-		fibo_heap->max_root_degree = node->degree;
+	//if (node->degree > fibo_heap->max_root_degree)
+	//	fibo_heap->max_root_degree = node->degree;
 }
 
 // Move a sub-heap of a Fibonacci heap to the root level
@@ -301,7 +308,7 @@ void insertSingleRootInFiboHeap (FiboHeap* fibo_heap, Node* node)
 void setSubHeapAsRoot (FiboHeap* fibo_heap, Node* sub_root)
 {
 	// Add sub_root to the list of heap roots
-	mergeNodeLists(sub_root, fibo_heap->min_element);
+	mergeListsOfNodes(sub_root, fibo_heap->min_element);
 
 	// Update the minimum element if necessary
 	NodeValue new_value = sub_root->value;
@@ -322,7 +329,7 @@ FiboHeap* mergeFiboHeaps (FiboHeap* fibo_heap_1, FiboHeap* fibo_heap_2)
 	FiboHeap* new_fibo_heap = createFiboHeap();
 
 	// Merge the lists of nodes
-	mergeNodeLists(fibo_heap_1->min_element, fibo_heap_2->min_element);
+	mergeListsOfNodes(fibo_heap_1->min_element, fibo_heap_2->min_element);
 
 	// Set the minimum element of the new Fibonaccci heap
 	Node* min_element_1 = fibo_heap_1->min_element;
@@ -516,8 +523,8 @@ void consolidateFiboHeap (FiboHeap* fibo_heap)
 
 			while (roots_of_degree[current_degree] != NULL)
 			{
-				printf("Màj tableau par degré avec noeud courant = %x (%d))\n",
-					(int) current_node, current_node->value);
+				// printf("Màj tableau par degré avec noeud courant = %x (%d))\n",
+				//	(int) current_node, current_node->value);
 
 				Node* current_deg_root = roots_of_degree[current_degree];
 

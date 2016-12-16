@@ -13,40 +13,33 @@ typedef int NodeValue;
 
 // Node of a circular double-linked list (node in one of the heaps)
 typedef struct Node {
-	// Sibling nodes
+	// Related nodes
 	struct Node* next;
 	struct Node* previous;
-
-	// Parent node
 	struct Node* father;
-
-	// One child of the node
 	struct Node* child;
 
-	// Value of the node
+	// Key and value
 	NodeValue value;
+	int 	  key;
 
-	// Degree of the node (number of children)
+	// Degree (number of children)
 	unsigned int degree;
 
-	// Tag of the node
+	// Tag
 	bool is_tagged;
 } Node;
 
-// Collection of heaps forming a Fibonacci heap (+ additional information)
+// Collection of heaps roots forming a Fibonacci heap
 typedef struct FiboHeap {
-	// Root with the smallest value
-	// This is sufficient to access the collection of heaps!
+	// Root with the smallest key of
 	Node* min_element;
 
-	// Degree of the Fibonacci heap (i.e. number of heap roots)
+	// Degree (number of heap roots)
 	unsigned int degree;
 
 	// Total number of nodes
 	unsigned int nb_nodes;
-
-	unsigned int max_root_degree;
-
 } FiboHeap;
 
 //------------------------------------------------------------------------------
@@ -59,14 +52,13 @@ void freeNodeTree (Node* root);
 FiboHeap* createFiboHeap ();
 void freeFiboHeap (FiboHeap* fibo_heap);
 void printFiboHeap (FiboHeap* const fibo_heap);
-
+/*
 bool hasSibling (const Node* node);
 bool hasFather (const Node* node);
 bool hasChild (const Node* node);
 unsigned int getNbNodesOfList (Node* const node);
-
 void printCDLL (Node* cdll_node);
-
+*/
 void extractNodeFromList (Node* node);
 void mergeNodeLists (Node* source, Node* destination);
 void insertNodeAsChild (Node* child, Node* father);

@@ -17,7 +17,7 @@
 //------------------------------------------------------------------------------
 
 // Returns a pointer to a new node
-Node* createNode (const NodeValue value)
+Node* createNode (NodeValue value, int key)
 {
 	Node* new_node = malloc(sizeof(Node));
 	CHECK_MALLOC(new_node)
@@ -27,6 +27,7 @@ Node* createNode (const NodeValue value)
 	new_node->father 	= NULL;
 	new_node->child 	= NULL;
 	new_node->value 	= value;
+	new_node->key 		= key;
 	new_node->degree 	= 0;
 	new_node->is_tagged = false;
 
@@ -34,9 +35,9 @@ Node* createNode (const NodeValue value)
 }
 
 // Returns a pointer to a new, isolated node (first of a CDLL)
-Node* createIsolatedNode (const NodeValue value)
+Node* createIsolatedNode (NodeValue value, int key)
 {
-	Node* new_isolated_node = createNode(value);
+	Node* new_isolated_node = createNode(value, key);
 
 	new_isolated_node->next 	= new_isolated_node;
 	new_isolated_node->previous = new_isolated_node;
@@ -50,7 +51,7 @@ void freeNode (Node* node)
 	free(node);
 }
 
-// Recursively free a tree of nodes, from a given root
+// Recursively free nodes forming a tree, from a given root
 void freeNodeTree (Node* root)
 {
 	// Free all the root's children (recursively, DFS-like), if any
@@ -58,21 +59,44 @@ void freeNodeTree (Node* root)
 	if (current_child != NULL)
 	{
 		// Free all the siblings of the pointed child, if any
-		Node* next_child = current_child->next;
-		while (next_child != root->child)
+		Node* next_child;
+		do
 		{
-			current_child 	= next_child;
-			next_child 		= next_child->next;
-
+			next_child = next_child->next;
 			freeNodeTree(current_child);
-		}
 
-		// Free the pointed child
-		freeNodeTree(root->child);
+			current_child = next_child;
+		}
+		while (current_child != root->child);
 	}
 
 	// Free the root itself
 	free(root);
+}
+
+// Print information about a list of nodes + its content
+void printListOfNodes (Node* node)
+{
+	// Check if the list is empty (node is NULL)
+	if (node == NULL)
+	{
+		printf("(Nothing to print, node is NULL)\n");
+		return;
+	}
+
+	// Else, print all the values of all the nodes as well as their number
+	int nb_nodes = 0;
+	do
+	{
+		printf("%s(%x : %d)", nb_nodes == 0 ? "" : " - ",
+			(int) current_node, current_node->value);
+
+		current_node = current_node->next;
+		nb_nodes++;
+	}
+	while (current_node != min_element);
+
+	printf(" (%d elements)\n", nb_nodes);
 }
 
 //------------------------------------------------------------------------------
@@ -87,80 +111,50 @@ FiboHeap* createFiboHeap ()
 	new_fibo_heap->degree 		= 0;
 	new_fibo_heap->nb_nodes 	= 0;
 
-	new_fibo_heap->max_root_degree = 0;
-
 	return new_fibo_heap;
 }
 
-// Free a Fibonacci heap (including all its nodesS)
+// Free a Fibonacci heap (including all the nodes)
 void freeFiboHeap (FiboHeap* fibo_heap)
 {
-	// Free all the (sub-)heaps, if any
-	Node* current_heap_root = fibo_heap->min_element;
-	if (current_heap_root != NULL)
+	// Free all the rooted trees, if any
+	Node* current_root = root->min_element;
+	if (current_root != NULL)
 	{
-		// Free all the minimum element's heap siblings, if any
-		Node* next_heap_root = current_heap_root->next;
-		while (next_heap_root != fibo_heap->min_element)
+		// Free all the siblings of the minimum element, if any
+		Node* next_root;
+		do
 		{
-			current_heap_root 	= next_heap_root;
-			next_heap_root 		= next_heap_root->next;
+			next_root = next_root->next;
+			freeNodeTree(current_root);
 
-			freeNodeTree(current_heap_root);
+			current_root = next_root;
 		}
-
-		// Free the minimum element's heap
-		freeNodeTree(fibo_heap->min_element);
+		while (current_root != root->min_element);
 	}
 
 	// Free the Fibonacci heap structure itself
 	free(fibo_heap);
 }
 
-void printFiboHeap (FiboHeap* const fibo_heap)
+void printFiboHeap (FiboHeap* fibo_heap)
 {
 	Node* min_element = fibo_heap->min_element;
-	Node* current_node = min_element;
-
-	if (current_node == NULL)
+	if (min_element == NULL)
 	{
-		printf("This Fibonacci heap has no (min) element.\n");
+		printf("(Nothing to print, Fibonacci heap is NULL)\n");
 		return;
 	}
 
-	int counter = 0;
-	printf("\n");
-	do
-	{
-		printf("%s%d", counter == 0 ? "" : " <-> ", current_node->value);
-		current_node = current_node->next;
-		counter++;
-	} while (current_node != min_element);
-	printf(" [%d elements]\n", counter);
+	printf("This Fibonacci heap contains %d node(s) and has a degree of %d.\n",
+		fibo_heap->nb_nodes, fibo_heap->degree);
+	printListOfNodes(min_element);
 }
 
 //------------------------------------------------------------------------------
 // Basic operations on nodes
 //------------------------------------------------------------------------------
-
-// Returns 1 if a node has at least one sibling, 0 otherwise
-bool hasSibling (const Node* node)
-{
-	return node->next != node;
-}
-
-// Return 1 if a node has a father, 0 otherwise
-bool hasFather (const Node* node)
-{
-	return node->father != NULL;
-}
-
-// Returns 1 if a node has at least one child, 0 otherwise
-bool hasChild (const Node* node)
-{
-	return node->degree > 0;
-}
-
+/*
 // Returns the number of nodes of a CDLL
 unsigned int getNbNodesOfList (Node* const node)
 {
@@ -181,73 +175,76 @@ unsigned int getNbNodesOfList (Node* const node)
 
 	return nb_siblings + 1;
 }
-
-void printCDLL (Node* cdll_node)
-{
-	if (cdll_node == NULL)
-	{
-		printf("(No list to display)\n");
-		return;
-	}
-
-	Node* current_node = cdll_node;
-	do {
-		printf("(%x | %d) --> ", (int) current_node, current_node->value);
-		current_node = current_node->next;
-	} while (current_node != cdll_node);
-}
+*/
 
 //------------------------------------------------------------------------------
 // Advanced operations on nodes
 //------------------------------------------------------------------------------
 
-// Extracts a node from a CDLL
-// If the node had siblings, they form a new CDLL without the extracted node
+// Extracts a node from a CDLL while conserving the CDLL structure
 void extractNodeFromList (Node* node)
 {	
-	if (hasFather(node))
+	// If the node has a father, it must be updated
+	if (node->father != NULL)
 	{
-		printf("ExtractNode: father found!\n");
+		// printf("ExtractNode: father found!\n");
 
-		// If the node has a father, it must be updated
 		(node->father->degree)--;
 
-		// If the father pointed to the extracted node, it is updated
+		// The father must point to another node is the list is not empty
 		node->father->child = NULL;
-		if (hasSibling(node))
+		if (node->next != node)
 			node->father->child = node->next;
 	}
 	
-	if (hasSibling(node))
+	// If the node has siblings, the CDLL structure must be updated
+	if (node->next != node)
 	{
-		printf("ExtractNode: sibling found!\n");
+		// printf("ExtractNode: sibling found!\n");
 
-		// Immediate siblings must be updated
 		node->next->previous = node->previous;
 		node->previous->next = node->next;
 
-		// The node becomes a single-element CDLL
-		// (If the node has no sibling, it must already be the case)
+		// Safer: the node becomes a single-element CDLL
 		node->next 		= node;
 		node->previous 	= node;
 	}
 }
 
-// Merge two CDLLs of nodes, by adding source nodes in the same list as destination
-// Both lists must be different CDLLs; else, the result is undefined
-// Note that pointers to father are *not* updated
-void mergeNodeLists (Node* source, Node* destination)
+// Insert a single node in a CDLL
+void insertNodeInList (Node* node_to_insert, Node* destination)
 {
+	// Update the inserted node node pointers
+	node_to_insert->previous = destination->previous;
+	node_to_insert->next 	 = destination;
+
+	// Update the list pointers
+	destination->previous->next = node_to_insert;
+	destination->previous 		= node_to_insert;
+
+	// Update the inserted node's father
+	node_to_insert->father = destination->father;
+}
+
+// Merge two CDLLs, by adding to_merge CDLL's nodes in the destination CDLL
+// Both lists must be different; else, the result is undefined!
+void insertListOfNodes (Node* to_merge, Node* destination)
+{
+	/* A VERIFIER ! */
+
 	// Get the last node of each list (assuming the given nodes are the "first" ones)
-	Node* source_last_node 		= source->previous;
+	Node* source_last_node 		= to_merge->previous;
 	Node* destination_last_node = destination->previous;
 
 	// Update the first and last elements of each list
 	destination->previous 	= source_last_node;
-	source->previous 		= destination_last_node;
+	to_merge->previous 		= destination_last_node;
 
-	destination_last_node->next = source;
+	destination_last_node->next = to_merge;
 	source_last_node->next 		= destination;
+
+	// Update all the inserted nodes' fathers
+	
 
 	return;
 }

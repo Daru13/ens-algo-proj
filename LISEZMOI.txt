@@ -1,0 +1,34 @@
+*********************************************
+Projet d'algorithmique
+Algorithme de Dijkstra et Tas de Fibonacci
+*********************************************
+Camille GOBERT, Josselin GIET
+*********************************************
+
+VEUILLEZ NOTER QUE CE PROJET EST INCOMPLET ET
+NE FONCTIONNE PAS !
+
+Les tas des Fibonacci ne sont pas suffisament implémentées
+pour fonctionner, et nous n'avons ainsi pas eu le temps de nous
+concentrer sur la version naïve de Dijkstra et de la file de priorité,
+étant donné que nous souhaitions avant tout réaliser des tas de
+Fibonacci fonctionnels (sans succès).
+
+Cependant, la majorité du code est écrit, et il reste surtout à
+corriger quelques problèmes, et implémenter ce qu'il manque.
+Les calculs de complexité ne sont également pas encore présents, étant
+donné que nous pensions tous les écrire une fois le programme entièrement
+fonctionnel...
+
+*********************************************
+
+COMPILATION :
+Utiliser la commande "make" dans le répertoire principale.
+Les fichiers produits (y compris l'exécutable de test) se trouvent
+dans le dossier "build".
+
+SOURCES :
+Les descriptions du contenu de chaque fichier sont brièvement faites
+au début de ceux-ci (du moins pour les fichiers .c). Les noms des fichiers
+sont également censés être relativement explicites.
+

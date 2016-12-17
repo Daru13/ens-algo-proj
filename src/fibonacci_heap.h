@@ -48,6 +48,7 @@ Node* createNode (NodeValue value, int key);
 Node* createIsolatedNode (NodeValue value, int key);
 void freeNode (Node* node);
 void freeNodeTree (Node* root);
+void printNodeDetails (Node* node);
 void printListOfNodes (Node* node);
 
 FiboHeap* createFiboHeap ();

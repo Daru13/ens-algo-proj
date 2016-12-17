@@ -74,7 +74,29 @@ void freeNodeTree (Node* root)
 	free(root);
 }
 
-// Print information about a list of nodes + its content
+void printNodeDetails (Node* node)
+{
+	// Check if the node is NULL
+	if (node == NULL)
+	{
+		printf("(Nothing to print, node is NULL)\n");
+		return;
+	}
+
+	// Else, print various fields of the node
+	printf("Info about node (%p : %d)\n", (void*) node, node->key);
+	printf("| Degree: %d\n", node->degree);
+	printf("| Value: %d\n", node->value);
+	printf("| Next: (%p : %d) and Previous: (%p : %d)\n",
+		(void*) node->next, node->next->key,
+		(void*) node->previous, node->previous->key);
+	printf("| Father: (%p : %d) and Child: (%p : %d)\n",
+		(void*) node->father, node->father != NULL ? node->father->key : -1,
+		(void*) node->child, node->child != NULL ? node->child->key : -1);
+	printf("| Tagged: %s\n", node->is_tagged ? "true" : "false");
+}
+
+// Print a node and all its siblings (forming a CDLL)
 void printListOfNodes (Node* node)
 {
 	// Check if the list is empty (node is NULL)
@@ -91,7 +113,7 @@ void printListOfNodes (Node* node)
 	do
 	{
 		printf("%s(%p : %d)", nb_nodes == 0 ? "" : " - ",
-			(void*) current_node, current_node->value);
+			(void*) current_node, current_node->key);
 
 		current_node = current_node->next;
 		nb_nodes++;
@@ -197,6 +219,9 @@ void extractNodeFromList (Node* node)
 		node->father->child = NULL;
 		if (node->next != node)
 			node->father->child = node->next;
+
+		// The extracted node now have no father (useful or not?)
+		node->father = NULL;
 	}
 	
 	// If the node has siblings, the CDLL structure must be updated

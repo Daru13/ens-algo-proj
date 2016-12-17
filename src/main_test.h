@@ -12,8 +12,7 @@
 
 Node** generateFixedNodesArray (int nb_nodes);
 Node** generateRandomNodesArray (int nb_nodes);
-
-void mainTest_1 ();
+void deleteNodesArray (Node** node_array, int size);
 
 int main ();
 

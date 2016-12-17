@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 #include <time.h>
 #include "toolbox.h"
 #include "fibonacci_heap.h"
@@ -54,7 +55,7 @@ void printfFiboHeapInfo (FiboHeap* const fibo_heap)
 
 Node** generateFixedNodesArray (int nb_nodes)
 {
-	Node* generated_nodes = malloc(nb_nodes * sizeof(Node*));
+	Node** generated_nodes = malloc(nb_nodes * sizeof(Node*));
 	CHECK_MALLOC(generated_nodes);
 
 	for (int i = 0; i < nb_nodes; i++)
@@ -65,7 +66,7 @@ Node** generateFixedNodesArray (int nb_nodes)
 
 Node** generateRandomNodesArray (int nb_nodes)
 {
-	Node* generated_nodes = malloc(nb_nodes * sizeof(Node*));
+	Node** generated_nodes = malloc(nb_nodes * sizeof(Node*));
 	CHECK_MALLOC(generated_nodes);
 
 	for (int i = 0; i < nb_nodes; i++)
@@ -79,79 +80,96 @@ Node** generateRandomNodesArray (int nb_nodes)
 	return generated_nodes;
 }
 
+void deleteNodesArray (Node** node_array, int size)
+{
+	for (int i = 0; i < size; i++)
+		freeNode(node_array[i]);
+
+	free(node_array);
+}
+
 void testNodes_1 ()
 {
-	printProgressMessage("\n--------- MAIN TEST 1 ---------\n");
+	printProgressMessage("\n--------- TEST OF NODES  ---------\n");
 
-	//---------- Creation, insertion, extraction, deletion of nodes ----------
+	//---------- Creation, insertion, extraction, fusion, deletion of node lists ----------
 
-	
+	printProgressMessage("[An array of 10 nodes is created]\n");
+	Node** nodes = generateFixedNodesArray(10);
 
-	//---------- Cleaning ----------
+	printProgressMessage("[Two lists of 5 nodes are formed]\n");
+	Node* node_list_1 = nodes[0];
+	Node* node_list_2 = nodes[5];
 
-	printf("\n");
-
-	printProgressMessage("[The Fibonacci heap is deleted]\n");
-	freeFiboHeap(fibo_heap);
-}
-
-void mainTest_2 ()
-{
-	printProgressMessage("\n--------- MAIN TEST 2 ---------\n");
-
-	// Many nodes are created, the inserted in an empty Fibonacci heap
-	// Their values are randomly selected in a small range (to force collisions)
-
-	printProgressMessage("[Nodes with random values are created]\n");
-	printf("%d nodes created, values ranging from %d to %d\n",
-			NB_GEN_NODES, MIN_VALUE, MAX_VALUE);
-
-	Node* generated_nodes[NB_GEN_NODES];
-	for (int i = 0; i < NB_GEN_NODES; i++)
+	for (int i = 1; i <= 4; i++)
 	{
-		int random_value = rand() % (MAX_VALUE - MIN_VALUE + 1) + MIN_VALUE;
-		random_value = i; // DEBUG
-		generated_nodes[i] = createIsolatedNode(random_value);
+		insertNodeInList(nodes[i], node_list_1);
+		insertNodeInList(nodes[i + 5], node_list_2);
 	}
 
-	printNodesInfo(generated_nodes, NB_GEN_NODES);
-
-	//---------- Fibonacci heap ----------
-
+	printListOfNodes(node_list_1);
+	printListOfNodes(node_list_2);
 	printf("\n");
 
-	printProgressMessage("[A Fibonacci heap is created]\n");
-	FiboHeap* fibo_heap = createFiboHeap();
-	printFiboHeap(fibo_heap);
+	printProgressMessage("[The last element of each list is extracted]\n");
+	extractNodeFromList(nodes[4]);
+	Node* extracted_node_from_list_1 = nodes[4];
+	extractNodeFromList(nodes[9]);
+	Node* extracted_node_from_list_2 = nodes[9];
 
-	printProgressMessage("[All nodes are inserted in the Fibonacci heap]\n");
-	for (int i = 0; i < NB_GEN_NODES; i++)
-		insertSingleRootInFiboHeap(fibo_heap, generated_nodes[i]);
+	printNodeDetails(nodes[0]);
+	printListOfNodes(node_list_1);
+	printf("\n");
+	printNodeDetails(nodes[5]);
+	printListOfNodes(node_list_2);
+	printf("\n");
 
-	printfFiboHeapInfo(fibo_heap);
-	printFiboHeap(fibo_heap);
+	printProgressMessage("[Both nodes become child of the first node of the first list]\n");
+	insertNodeAsChild(extracted_node_from_list_1, nodes[0]);
+	insertNodeAsChild(extracted_node_from_list_2, nodes[0]);
 
-	printProgressMessage("[Half of the minimum values are extracted]\n");
-	Node* extracted_min_nodes[NB_GEN_NODES / 2];
-	for (int i = 0; i < NB_GEN_NODES / 2; i++)
-		extracted_min_nodes[i] = extractMinFromFiboHeap(fibo_heap);
+	printNodeDetails(nodes[0]);
+	printListOfNodes(node_list_1);
+	printf("\n");
+	printNodeDetails(nodes[5]);
+	printListOfNodes(node_list_2);
+	printf("\n");
 
-	printProgressMessage("[The extracted nodes are the following]\n");
+	printProgressMessage("[List 1 is merged into list two]\n");
+	mergeListsOfNodes(node_list_1, node_list_2);
 
-	printNodesInfo(extracted_min_nodes, NB_GEN_NODES / 2);
+	printListOfNodes(node_list_2);
+	printf("\n");
 
-	printfFiboHeapInfo(fibo_heap);
-	printFiboHeap(fibo_heap);
+	printProgressMessage("[The last node is extracted, then inserted as another child]\n");
+	extractNodeFromList(nodes[8]);
+	Node* extracted_node = nodes[8];
+
+	insertNodeAsChild(extracted_node, nodes[0]);
+
+	printNodeDetails(nodes[0]);
+	printListOfNodes(node_list_2);
+	printf("\n");
+
+	printProgressMessage("[The first two children of the parent are extracted]\n");
+	extractNodeFromList(extracted_node_from_list_1);
+	extractNodeFromList(extracted_node_from_list_2);
+
+	printf("Extracted children:\n");
+	printNodeDetails(extracted_node_from_list_1);
+	printNodeDetails(extracted_node_from_list_2);
+	
+	printf("\nParent node:\n");
+	printNodeDetails(nodes[0]);
+	printf("\n");
 
 	//---------- Cleaning ----------
 
-	printf("\n");
-
-	printProgressMessage("[The Fibonacci heap is deleted]\n");
-	freeFiboHeap(fibo_heap);
+	printProgressMessage("[All nodes are deleted]\n");
+	deleteNodesArray(nodes, 10);
 }
 
-void mainTest_3 ()
+void testGraph_1 ()
 {
 	printProgressMessage("[Enter a graph (in the right format)]\n");
 	Graph* g = createGraphFromFile(stdin);
@@ -175,9 +193,7 @@ int main ()
 {
 	srand(time(0));
 
-	// mainTest_1();
-	// mainTest_2();
-	mainTest_3();
+	testNodes_1();
 
 	return 0;
 }

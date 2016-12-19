@@ -26,33 +26,6 @@
 
 //------------------------------------------------------------------------------
 
-/*
-void printNodesInfo (Node* const nodes[], const int n)
-{
-	for (int i = 0; i < n; i++)
-		if (nodes[i] == NULL)
-			printf("Node %d is NULL\n", i);
-		else
-			printf("Node %d has value %d, is in a list of %d node(s) and has %d father.\n",
-				i,
-				nodes[i]->value,
-				getNbNodesOfList(nodes[i]),
-				nodes[i]->father != NULL ? 1 : 0);
-}
-
-void printfFiboHeapInfo (FiboHeap* const fibo_heap)
-{
-	// Number of nodes
-	printf("The Fibonacci heap has a total of %d node(s), and a degree of %d.\n",
-			fibo_heap->nb_nodes, fibo_heap->degree);
-
-	// Minimum element
-	Node* fibo_heap_min_element = fibo_heap->min_element;
-	printf("Value of its minimum element: %d\n",
-			fibo_heap_min_element != NULL ? fibo_heap_min_element->value : -1);
-}
-*/
-
 Node** generateFixedNodesArray (int nb_nodes)
 {
 	Node** generated_nodes = malloc(nb_nodes * sizeof(Node*));

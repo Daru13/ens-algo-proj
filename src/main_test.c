@@ -183,7 +183,7 @@ void testGraph_1 ()
 
 		int* res= dijkstraNaive(g, origin);
 		for (int i = 0; i < g->nb_vertexes; i++)
-			printf("Distance from %d to %d is: %d ", origin, i, res[i]);
+			printf("Distance from %d to %d is: %d \n ", origin, i, res[i]);
 	}
 	else
 		printProgressMessage("[The graph is *NOT* connected]\n");
@@ -193,7 +193,7 @@ int main ()
 {
 	srand(time(0));
 
-	testNodes_1();
+	testGraph_1();
 
 	return 0;
 }

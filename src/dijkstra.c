@@ -64,11 +64,16 @@ int extractMinimumNaive (int* queue, int* lengths, int nb_elements)
 	for (i = 1; i < nb_elements; i++)
 		if (lengths[queue[i]] != INF_LENGTH
 		&&	lengths[queue[i]]  < lengths[current_vertex])
+		{
+			int sauvegarde = current_vertex;
 			current_vertex = queue[i];
-
+			queue[i] = sauvegarde;
+		}
 	// Shift the table elements
-	for (int j = i; j < nb_elements - 1; j++)
+	 for (int j = i; j < nb_elements - 1; j++)
 		queue[j] = queue[j + 1];
+	
+
 
 	return current_vertex;
 }
@@ -98,7 +103,7 @@ int* dijkstraNaive (Graph* g, int s) // O(#A²)
 		// The element with the smallest distance is extracted
 		int min_elt = extractMinimumNaive(priority_queue,
 			lengths, priority_queue_nb_elts);
-
+		priority_queue_nb_elts--;
 		// If it is the first time the vertex is encountered...
 		if (! seen[min_elt])
 		{

@@ -63,7 +63,7 @@ void deleteNodesArray (Node** node_array, int size)
 
 void testNodes_1 ()
 {
-	printProgressMessage("\n--------- TEST OF NODES  ---------\n");
+	printProgressMessage("\n--------- TEST OF NODES ---------\n");
 
 	//---------- Creation, insertion, extraction, fusion, deletion of node lists ----------
 
@@ -156,17 +156,63 @@ void testGraph_1 ()
 
 		int* res= dijkstraNaive(g, origin);
 		for (int i = 0; i < g->nb_vertexes; i++)
-			printf("Distance from %d to %d is: %d \n ", origin, i, res[i]);
+			printf("Distance from %d to %d is: %d\n", origin, i, res[i]);
 	}
 	else
 		printProgressMessage("[The graph is *NOT* connected]\n");
+}
+
+void testFibonacciHeaps_1 ()
+{
+printProgressMessage("\n--------- TEST OF FIBONACCI HEAPS ---------\n");
+
+	//---------- Creation, insertion, min extraction (+ consolidatation) ----------
+
+	printProgressMessage("[An array of 10 nodes is created]\n");
+	Node** nodes = generateFixedNodesArray(10);
+
+	printProgressMessage("[A Fibonacci heap is created]\n");
+	FiboHeap* fibo_heap = createFiboHeap();
+	printFiboHeap(fibo_heap);
+
+	printProgressMessage("[All the nodes are inserted]\n");
+	for (int i = 0; i < 10; i++)
+		insertRootInFiboHeap(fibo_heap, nodes[i]);
+
+	printFiboHeap(fibo_heap);
+	printf("\n");
+
+	printProgressMessage("[3 minimum elements are successively extracted]\n");
+	Node* extracted_nodes[3];
+	for (int i = 0; i < 3; i++)
+	{
+		extracted_nodes[i] = extractMinFromFiboHeap(fibo_heap);
+		
+		printf("After extraction %d:\n", i + 1);
+		printFiboHeap(fibo_heap);
+	}
+
+	printProgressMessage("[Extracted minimum elements are the following]\n");
+	for (int i = 0; i < 3; i++)
+	{
+		printf("Extracted min %d:\n", i + 1);
+		printNodeDetails(extracted_nodes[i]);
+	}
+
+	//---------- Cleaning ----------
+
+	printProgressMessage("[The Fibonacci heap (and the nodes) are deleted]\n");
+	freeFiboHeap(fibo_heap);
+	free(nodes);
 }
 
 int main ()
 {
 	srand(time(0));
 
-	testGraph_1();
+	// testGraph_1();
+	// testNodes_1();
+	testFibonacciHeaps_1();
 
 	return 0;
 }

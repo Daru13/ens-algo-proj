@@ -55,14 +55,6 @@ FiboHeap* createFiboHeap ();
 void freeFiboHeap (FiboHeap* fibo_heap);
 void printFiboHeap (FiboHeap* fibo_heap);
 
-/*
-bool hasSibling (const Node* node);
-bool hasFather (const Node* node);
-bool hasChild (const Node* node);
-unsigned int getNbNodesOfList (Node* const node);
-void printCDLL (Node* cdll_node);
-*/
-
 void extractNodeFromList (Node* node);
 void insertNodeInList (Node* node_to_insert, Node* destination);
 void mergeListsOfNodes (Node* to_merge, Node* destination);

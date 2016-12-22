@@ -348,7 +348,7 @@ void consolidateFiboHeap (FiboHeap* fibo_heap)
 	// The Fibonacci heap should not be empty
 	assert(fibo_heap->min_element != NULL);
 
-	// Create and init an array of nodes indexed on degrees
+	// Create an array of nodes indexed on degrees
 	// The highest reachable degree is related to the total number of nodes...
 	Node* roots_of_degree[fibo_heap->nb_nodes];
 	for (unsigned int i = 0; i <= fibo_heap->nb_nodes; i++)
@@ -370,7 +370,7 @@ void consolidateFiboHeap (FiboHeap* fibo_heap)
 	while (nb_visited_roots < nb_roots
 	   ||  node_has_been_linked)
 	{
-		// Reset the control variable(s)
+		// Reset the control variable(s) and the per-degree nodes array
 		if (nb_visited_roots >= nb_roots)
 		{
 			nb_visited_roots = 0;
@@ -386,14 +386,16 @@ void consolidateFiboHeap (FiboHeap* fibo_heap)
 		// Initial degree of the current iteration
 		unsigned int current_degree = current_node->degree;
 
+/* TODO : Cette boucle pose parfois un souci ! */
+
 		while (roots_of_degree[current_degree] != NULL
 		   &&  roots_of_degree[current_degree] != current_node)
 		{
 			// Root node having the same degree
 			Node* current_degree_root = roots_of_degree[current_degree];
 
-			// printf("\nWhile 2: ");
-			// printNodeDetails(current_degree_root);
+			printf("\nWhile 2 (current degree = %d) ", current_degree);
+			printNodeDetails(current_degree_root);
 
 			// The node with the highest key becomes the child of the other one
 			if (current_node->key > current_degree_root->key)

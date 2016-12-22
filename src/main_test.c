@@ -22,36 +22,9 @@
 #define MAX_NODE_VALUE 10
 
 #define MIN_NODE_KEY 0
-#define MAX_NODE_KEY 20
+#define MAX_NODE_KEY 5
 
 //------------------------------------------------------------------------------
-
-/*
-void printNodesInfo (Node* const nodes[], const int n)
-{
-	for (int i = 0; i < n; i++)
-		if (nodes[i] == NULL)
-			printf("Node %d is NULL\n", i);
-		else
-			printf("Node %d has value %d, is in a list of %d node(s) and has %d father.\n",
-				i,
-				nodes[i]->value,
-				getNbNodesOfList(nodes[i]),
-				nodes[i]->father != NULL ? 1 : 0);
-}
-
-void printfFiboHeapInfo (FiboHeap* const fibo_heap)
-{
-	// Number of nodes
-	printf("The Fibonacci heap has a total of %d node(s), and a degree of %d.\n",
-			fibo_heap->nb_nodes, fibo_heap->degree);
-
-	// Minimum element
-	Node* fibo_heap_min_element = fibo_heap->min_element;
-	printf("Value of its minimum element: %d\n",
-			fibo_heap_min_element != NULL ? fibo_heap_min_element->value : -1);
-}
-*/
 
 Node** generateFixedNodesArray (int nb_nodes)
 {
@@ -90,7 +63,7 @@ void deleteNodesArray (Node** node_array, int size)
 
 void testNodes_1 ()
 {
-	printProgressMessage("\n--------- TEST OF NODES  ---------\n");
+	printProgressMessage("\n--------- TEST OF NODES ---------\n");
 
 	//---------- Creation, insertion, extraction, fusion, deletion of node lists ----------
 
@@ -183,17 +156,105 @@ void testGraph_1 ()
 
 		int* res= dijkstraNaive(g, origin);
 		for (int i = 0; i < g->nb_vertexes; i++)
-			printf("Distance from %d to %d is: %d \n ", origin, i, res[i]);
+			printf("Distance from %d to %d is: %d\n", origin, i, res[i]);
 	}
 	else
 		printProgressMessage("[The graph is *NOT* connected]\n");
+}
+
+void testFibonacciHeaps_1 ()
+{
+printProgressMessage("\n--------- TEST OF FIBONACCI HEAPS 1 ---------\n");
+
+	//---------- Creation, insertion, min extraction (+ consolidatation) ----------
+
+	printProgressMessage("[An array of 5 nodes is created]\n");
+	Node** nodes = generateFixedNodesArray(5);
+
+	printProgressMessage("[A Fibonacci heap is created]\n");
+	FiboHeap* fibo_heap = createFiboHeap();
+	printFiboHeap(fibo_heap);
+
+	printProgressMessage("[All the nodes are inserted]\n");
+	for (int i = 0; i < 5; i++)
+		insertRootInFiboHeap(fibo_heap, nodes[i]);
+
+	printFiboHeap(fibo_heap);
+	printf("\n");
+
+	printProgressMessage("[The minimum elements is extracted]\n");
+
+	Node* extracted_nodes[3];
+	for (int i = 0; i < 3; i++)
+	{
+		extracted_nodes[i] = extractMinFromFiboHeap(fibo_heap);
+		
+		printf("After extraction %d:\n", i + 1);
+		printFiboHeap(fibo_heap);
+	}
+
+	printProgressMessage("[Extracted minimum elements are the following]\n");
+	for (int i = 0; i < 3; i++)
+	{
+		printf("Extracted min %d:\n", i + 1);
+		printNodeDetails(extracted_nodes[i]);
+	}
+
+	//---------- Cleaning ----------
+
+	printProgressMessage("[The Fibonacci heap (and the nodes) are deleted]\n");
+	freeFiboHeap(fibo_heap);
+	free(nodes);
+}
+
+void testFibonacciHeaps_2 ()
+{
+printProgressMessage("\n--------- TEST OF FIBONACCI HEAPS 2 ---------\n");
+
+	//---------- Extraction of several minimums with random nodes ----------
+
+	printProgressMessage("[An array of 10 random nodes is created]\n");
+	Node** nodes = generateRandomNodesArray(10);
+
+	printProgressMessage("[A Fibonacci heap is created]\n");
+	FiboHeap* fibo_heap = createFiboHeap();
+
+	printProgressMessage("[All the nodes are inserted]\n");
+	for (int i = 0; i < 10; i++)
+		insertRootInFiboHeap(fibo_heap, nodes[i]);
+	printFiboHeap(fibo_heap);
+
+	printProgressMessage("[5 minimum elements are extracted]\n");
+
+	Node* extracted_nodes[5];
+	for (int i = 0; i < 5; i++)
+	{
+		extracted_nodes[i] = extractMinFromFiboHeap(fibo_heap);
+		printFiboHeap(fibo_heap);
+	}
+
+	printProgressMessage("[Extracted minimum elements are the following]\n");
+	for (int i = 0; i < 5; i++)
+		printf("Extracted min %d: (%p : %d)\n",
+			i + 1, (void*) extracted_nodes[i], extracted_nodes[i]->key);
+
+
+	
+	//---------- Cleaning ----------
+
+	printProgressMessage("[The Fibonacci heap (and the nodes) are deleted]\n");
+	freeFiboHeap(fibo_heap);
+	free(nodes);
 }
 
 int main ()
 {
 	srand(time(0));
 
-	testGraph_1();
+	// testGraph_1();
+	// testNodes_1();
+	// testFibonacciHeaps_1();
+	testFibonacciHeaps_2();
 
 	return 0;
 }

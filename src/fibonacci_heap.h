@@ -55,22 +55,15 @@ FiboHeap* createFiboHeap ();
 void freeFiboHeap (FiboHeap* fibo_heap);
 void printFiboHeap (FiboHeap* fibo_heap);
 
-/*
-bool hasSibling (const Node* node);
-bool hasFather (const Node* node);
-bool hasChild (const Node* node);
-unsigned int getNbNodesOfList (Node* const node);
-void printCDLL (Node* cdll_node);
-*/
-
 void extractNodeFromList (Node* node);
 void insertNodeInList (Node* node_to_insert, Node* destination);
 void mergeListsOfNodes (Node* to_merge, Node* destination);
 void insertNodeAsChild (Node* child, Node* father);
 
-void insertSingleRootInFiboHeap (FiboHeap* fibo_heap, Node* node);
-void setSubHeapAsRoot (FiboHeap* fibo_heap, Node* sub_root);
-void linkRootNodes (FiboHeap* fibo_heap, Node* child, Node* father);
+void insertRootInFiboHeap (FiboHeap* fibo_heap, Node* new_root);
+void moveSubHeapToRoot (FiboHeap* fibo_heap, Node* sub_heap);
+void linkRootNodes (FiboHeap* fibo_heap, Node* root_child, Node* root_father);
+
 void consolidateFiboHeap (FiboHeap* fibo_heap);
 Node* extractMinFromFiboHeap (FiboHeap* fibo_heap);
 

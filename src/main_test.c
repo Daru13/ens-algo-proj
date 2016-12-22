@@ -146,20 +146,28 @@ void testGraph_1 ()
 {
 	printProgressMessage("[Enter a graph (in the right format)]\n");
 	Graph* g = createGraphFromFile(stdin);
+	int compt = 0;
 
-	if (graphIsConnected(g))
+	if (graphIsConnected(g,&compt))
 	{
 		printProgressMessage("[The graph is connected]\n");
+		printf("fait en %d étapes \n" , compt);
 
+		compt = 0;
+	
 		int origin = 0;
 		printProgressMessage("[Distances from vertice 0]\n");
 
-		int* res= dijkstraNaive(g, origin);
+		int* res= dijkstraNaive(g, origin, &compt);
 		for (int i = 0; i < g->nb_vertexes; i++)
 			printf("Distance from %d to %d is: %d\n", origin, i, res[i]);
+		printf("fait en %d étapes \n" , compt);
 	}
 	else
+	{
 		printProgressMessage("[The graph is *NOT* connected]\n");
+		printf("fait en %d étapes \n" , compt);
+	}
 }
 
 void testFibonacciHeaps_1 ()
@@ -251,10 +259,10 @@ int main ()
 {
 	srand(time(0));
 
-	// testGraph_1();
+	testGraph_1();
 	// testNodes_1();
 	// testFibonacciHeaps_1();
-	testFibonacciHeaps_2();
+	// testFibonacciHeaps_2();
 
 	return 0;
 }

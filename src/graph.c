@@ -103,36 +103,43 @@ Graph* createGraphFromFile (FILE* file)
 // GRAPH CONNECTIVITY
 //------------------------------------------------------------------------------
 
-bool graphIsConnected (Graph* g)
+bool graphIsConnected (Graph* g, int* compt)
 {
 	List* waiting = createList();
 	addElementToList(waiting, 0);
+	*compt = (*compt)+2;
 
 	bool seen[g->nb_vertexes];
 	for (int i = 0 ; i < g->nb_vertexes; i++)
 	{
 		seen[i] = false;
+		(*compt)++;
 	}
 	while (! listIsEmpty(waiting))
 	{
 		int nd = popFromList(waiting) ;
+		*compt = *compt +2;
 		if ( !seen[nd])
 		{
 			seen[nd] = true;
 			Edge* EL = g->edges[nd];
+			*compt = *compt +2;
 			while ( EL != NULL)
 			{
 				addElementToList (waiting, EL->destination);
 				EL = EL->next;
+				(*compt)++;
 			}
 
 		}
 	}
 
 	bool res = true;
+	(*compt)++;
 	for (int i=0; i<g->nb_vertexes ; i++)
 	{
 		res = res && (seen[i]);
+		(*compt)++;
 	}
 	return res;
 }

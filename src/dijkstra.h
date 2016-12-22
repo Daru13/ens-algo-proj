@@ -9,6 +9,7 @@
 
 //------------------------------------------------------------------------------
 
-int* dijkstraNaive(Graph*,int);
+int extractMinimumNaive(bool*,int*,int,int*);
+int* dijkstraNaive(Graph*,int, int*);
 
 #endif

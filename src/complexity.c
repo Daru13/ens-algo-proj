@@ -24,6 +24,8 @@ unsigned int COMPLEXITY = 0;
 // FUNCTIONS FROM FILE "list.c"
 //------------------------------------------------------------------------------
 
+/*
+
 int ComplexityOf_createList () { return 4; }
 int ComplexityOf_listIsEmpty () { return 2; }
 int ComplexityOf_addElementToList () { return 5; }
@@ -46,10 +48,13 @@ int ComplexityOf_concatTwoLists (List* L1 ,List* L2)
 	return complexity;
 }
 
+*/
 
 //------------------------------------------------------------------------------
 // FUNCTIONS FROM FILE "graph.c"
 //------------------------------------------------------------------------------
+
+/*
 
 int ComplexityOf_createEdge () {return 0; }
 int ComplexityOf_createEmptyGraph () {return 0; }
@@ -103,6 +108,7 @@ int ComplexityOf_graphIsConnected (Graph* g)
     return compt;
 }                                                                                            
 
+*/
 
 //------------------------------------------------------------------------------
 // FUNCTIONS FROM FILE "fibonacci_heap.c"
@@ -113,6 +119,8 @@ int ComplexityOf_graphIsConnected (Graph* g)
 //------------------------------------------------------------------------------
 // FUNCTIONS FROM FILE "dijkstra.c"
 //------------------------------------------------------------------------------
+
+/*
 
 #define INF_LENGTH -1
 
@@ -207,3 +215,5 @@ int ComplexityOf_dijkstraNaive (Graph* g, int s) // O(#A²)
 	}
 	return compt;
 }
+
+*/

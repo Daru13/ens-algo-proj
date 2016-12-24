@@ -14,11 +14,13 @@
 extern unsigned int COMPLEXITY;
 
 // Functions from file "list.c"
+/*
 int ComplexityOf_createList ();
 int ComplexityOf_listIsEmpty ();
 int ComplexityOf_addElementToList ();
 int ComplexityOf_popFromList ();
 int ComplexityOf_concatTwoLists (List* L1, List* L2);
+*/
 
 // Functions from file "graph.c"
 

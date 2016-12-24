@@ -200,7 +200,7 @@ void extractNodeFromList (Node* node)
 		if (node->next != node)
 			node->father->child = node->next;
 
-		// The extracted node now have no father (useful or not?)
+		// The extracted node now have no father
 		node->father = NULL;
 	}
 	
@@ -386,16 +386,12 @@ void consolidateFiboHeap (FiboHeap* fibo_heap)
 		// Initial degree of the current iteration
 		unsigned int current_degree = current_node->degree;
 
-/* TODO : Cette boucle pose parfois un souci ! */
-
 		while (roots_of_degree[current_degree] != NULL
-		   &&  roots_of_degree[current_degree] != current_node)
+		   &&  roots_of_degree[current_degree] != current_node
+		   &&  current_node->father == NULL)
 		{
 			// Root node having the same degree
 			Node* current_degree_root = roots_of_degree[current_degree];
-
-			printf("\nWhile 2 (current degree = %d) ", current_degree);
-			printNodeDetails(current_degree_root);
 
 			// The node with the highest key becomes the child of the other one
 			if (current_node->key > current_degree_root->key)
@@ -403,7 +399,14 @@ void consolidateFiboHeap (FiboHeap* fibo_heap)
 				Node* current_node_copy = current_node;
 				current_node 			= current_degree_root;
 				current_degree_root 	= current_node_copy;
+
+				// Update the next node to visit to reflect this inversion
+				//next_node = current_node->next;				
 			}
+
+			// printf("\nWhile 2 (current degree = %d) ", current_degree);
+			// printNodeDetails(current_node);
+			// printNodeDetails(current_degree_root);
 
 			linkRootNodes(fibo_heap, current_degree_root, current_node);
 
@@ -439,8 +442,8 @@ void consolidateFiboHeap (FiboHeap* fibo_heap)
 		}
 
 	// printf("\nFin de la consolidation :\n");
-	// printListOfNodes(fibo_heap->min_element);
-	// printf("----------------------------------------------------------\n");
+	printFiboHeap(fibo_heap);
+	printf("----------------------------------------------------------\n");
 }
 
 Node* extractMinFromFiboHeap (FiboHeap* fibo_heap)

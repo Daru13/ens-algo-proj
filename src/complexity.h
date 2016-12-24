@@ -26,4 +26,4 @@ int ComplexityOf_concatTwoLists (List* L1, List* L2);
 // Functions from file "dijkstra.c"
 
 
-#endif _COMPLEXITY_H_
+#endif

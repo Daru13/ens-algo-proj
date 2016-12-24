@@ -221,32 +221,30 @@ printProgressMessage("\n--------- TEST OF FIBONACCI HEAPS 2 ---------\n");
 
 	//---------- Extraction of several minimums with random nodes ----------
 
-	printProgressMessage("[An array of 10 random nodes is created]\n");
-	Node** nodes = generateRandomNodesArray(10);
+	printProgressMessage("[An array of 50 random nodes is created]\n");
+	Node** nodes = generateRandomNodesArray(50);
 
 	printProgressMessage("[A Fibonacci heap is created]\n");
 	FiboHeap* fibo_heap = createFiboHeap();
 
 	printProgressMessage("[All the nodes are inserted]\n");
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 50; i++)
 		insertRootInFiboHeap(fibo_heap, nodes[i]);
 	printFiboHeap(fibo_heap);
 
-	printProgressMessage("[5 minimum elements are extracted]\n");
+	printProgressMessage("[15 minimum elements are extracted]\n");
 
-	Node* extracted_nodes[5];
-	for (int i = 0; i < 5; i++)
+	Node* extracted_nodes[15];
+	for (int i = 0; i < 15; i++)
 	{
 		extracted_nodes[i] = extractMinFromFiboHeap(fibo_heap);
-		printFiboHeap(fibo_heap);
+		// printFiboHeap(fibo_heap);
 	}
 
 	printProgressMessage("[Extracted minimum elements are the following]\n");
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 15; i++)
 		printf("Extracted min %d: (%p : %d)\n",
 			i + 1, (void*) extracted_nodes[i], extracted_nodes[i]->key);
-
-
 	
 	//---------- Cleaning ----------
 
@@ -259,10 +257,10 @@ int main ()
 {
 	srand(time(0));
 
-	testGraph_1();
+	// testGraph_1();
 	// testNodes_1();
 	// testFibonacciHeaps_1();
-	// testFibonacciHeaps_2();
+	testFibonacciHeaps_2();
 
 	return 0;
 }

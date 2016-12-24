@@ -253,6 +253,58 @@ printProgressMessage("\n--------- TEST OF FIBONACCI HEAPS 2 ---------\n");
 	free(nodes);
 }
 
+
+void testFibonacciHeaps_3 ()
+{
+printProgressMessage("\n--------- TEST OF FIBONACCI HEAPS 3 ---------\n");
+
+	//---------- Key decreasing + minimum extraction ----------
+
+	printProgressMessage("[An array of 10 nodes is created]\n");
+	Node** nodes = generateFixedNodesArray(10);
+
+	printProgressMessage("[A Fibonacci heap is created]\n");
+	FiboHeap* fibo_heap = createFiboHeap();
+
+	printProgressMessage("[All the nodes are inserted]\n");
+	for (int i = 0; i < 10; i++)
+		insertRootInFiboHeap(fibo_heap, nodes[i]);
+	printFiboHeap(fibo_heap);
+
+	printProgressMessage("[The two minimum elements are extracted]\n");
+
+	Node* extracted_nodes[3];
+	for (int i = 0; i < 2; i++)
+	{
+		extracted_nodes[i] = extractMinFromFiboHeap(fibo_heap);
+		// printFiboHeap(fibo_heap);
+	}
+
+	printFiboHeap(fibo_heap);
+
+	printProgressMessage("[The key of the \"last\" element is decreased (to -42)]\n");
+	decreaseKeyInFiboHeap(fibo_heap, nodes[9], -42);
+
+	printFiboHeap(fibo_heap);
+
+	printProgressMessage("[Another minimum element is exracted]\n");
+	extracted_nodes[2] = extractMinFromFiboHeap(fibo_heap);
+
+	printFiboHeap(fibo_heap);
+
+	printProgressMessage("[The extracted minimums are the following]\n");
+
+	for (int i = 0; i < 3; i++)
+		printf("Extracted min %d: (%p : %d)\n",
+			i + 1, (void*) extracted_nodes[i], extracted_nodes[i]->key);
+	
+	//---------- Cleaning ----------
+
+	printProgressMessage("[The Fibonacci heap (and the nodes) are deleted]\n");
+	freeFiboHeap(fibo_heap);
+	free(nodes);
+}
+
 int main ()
 {
 	srand(time(0));
@@ -260,7 +312,8 @@ int main ()
 	// testGraph_1();
 	// testNodes_1();
 	// testFibonacciHeaps_1();
-	testFibonacciHeaps_2();
+	// testFibonacciHeaps_2();
+	testFibonacciHeaps_3();
 
 	return 0;
 }

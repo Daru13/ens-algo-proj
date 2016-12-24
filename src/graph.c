@@ -11,6 +11,7 @@
 #include <assert.h>
 #include "list.h"
 #include "toolbox.h"
+#include "complexity.h"
 #include "graph.h"
 
 //------------------------------------------------------------------------------

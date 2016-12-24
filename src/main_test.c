@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <time.h>
 #include "toolbox.h"
+#include "complexity.h"
 #include "fibonacci_heap.h"
 #include "main_test.h"
 #include "graph.h"
@@ -314,6 +315,9 @@ int main ()
 	// testFibonacciHeaps_1();
 	// testFibonacciHeaps_2();
 	testFibonacciHeaps_3();
+
+	printf("\nFinal complexity: %d basic operations have been carried out.\n",
+		COMPLEXITY);
 
 	return 0;
 }

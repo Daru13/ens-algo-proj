@@ -16,6 +16,11 @@
 #include "complexity.h"
 
 //------------------------------------------------------------------------------
+
+// Declaration and initialization of the global complexity variable
+unsigned int COMPLEXITY = 0;
+
+//------------------------------------------------------------------------------
 // FUNCTIONS FROM FILE "list.c"
 //------------------------------------------------------------------------------
 
@@ -169,36 +174,36 @@ int ComplexityOf_dijkstraNaive (Graph* g, int s) // O(#A²)
 	// Main loop (over the priority queue structure)
 	for (int i = 0; i<g->nb_vertexes;i++)
 	{
-	// The element with the smallest distance is extracted
-	int* truc;
-	int min_elt = extractMinimumNaive(seen,
-		lengths, g->nb_vertexes, truc);
-	compt += ComplexityOf_extractMinimumNaive(
-		seen,lengths, g->nb_vertexes);
-	seen[min_elt] = true;
-	compt++;
-	// Iteration over all min_elt's neighbours
-	Edge* current_edge = g->edges[min_elt];
-	compt++;
-	while (current_edge != NULL)
-	{
-		// Each neighbour is added to the priority structure
-		int neighbour = current_edge->destination;
+		// The element with the smallest distance is extracted
+		int* truc;
+		int min_elt = extractMinimumNaive(seen,
+			lengths, g->nb_vertexes, truc);
+		compt += ComplexityOf_extractMinimumNaive(
+			seen,lengths, g->nb_vertexes);
+		seen[min_elt] = true;
 		compt++;
-		// Improve the lengths if possible
-		int weight = current_edge->weight;
+		// Iteration over all min_elt's neighbours
+		Edge* current_edge = g->edges[min_elt];
 		compt++;
-				
-		compt += 2;
-		if (lengths[neighbour] == INF_LENGTH
-		||  lengths[neighbour] > lengths[min_elt] + weight)
+		while (current_edge != NULL)
 		{
-			lengths[neighbour] = lengths[min_elt] + weight;
+			// Each neighbour is added to the priority structure
+			int neighbour = current_edge->destination;
+			compt++;
+			// Improve the lengths if possible
+			int weight = current_edge->weight;
+			compt++;
+					
+			compt += 2;
+			if (lengths[neighbour] == INF_LENGTH
+			||  lengths[neighbour] > lengths[min_elt] + weight)
+			{
+				lengths[neighbour] = lengths[min_elt] + weight;
+				compt++;
+			}
+			current_edge = current_edge->next;
 			compt++;
 		}
-		current_edge = current_edge->next;
-		compt++;
-	}
 	}
 	return compt;
 }

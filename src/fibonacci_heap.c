@@ -10,6 +10,7 @@
 #include <assert.h>
 #include <stdbool.h>
 #include "toolbox.h"
+#include "complexity.h"
 #include "fibonacci_heap.h"
 
 //------------------------------------------------------------------------------
@@ -30,6 +31,8 @@ Node* createNode (NodeValue value, int key)
 	new_node->key 		= key;
 	new_node->degree 	= 0;
 	new_node->is_tagged = false;
+
+	COMPLEXITY += 10;
 
 	return new_node;
 }

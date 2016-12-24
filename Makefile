@@ -20,20 +20,20 @@ build/complexity.o: src/complexity.c src/complexity.h
 
 src/complexity.h: src/list.h src/graph.h src/fibonacci_heap.h src/dijkstra.h
 
-build/dijkstra.o: src/dijkstra.c src/dijkstra.h src/toolbox.h src/list.h src/graph.h
+build/dijkstra.o: src/dijkstra.c src/dijkstra.h src/toolbox.h src/list.h src/graph.h src/complexity.h
 	$(CC) $(CCFLAGS) -c src/dijkstra.c -o build/dijkstra.o
 
 src/dijkstra.h: src/graph.h 
 
-build/fibonacci_heap.o: src/fibonacci_heap.c src/fibonacci_heap.h src/toolbox.h
+build/fibonacci_heap.o: src/fibonacci_heap.c src/fibonacci_heap.h src/toolbox.h src/complexity.h
 	$(CC) $(CCFLAGS) -c src/fibonacci_heap.c -o build/fibonacci_heap.o
 
 src/fibonacci_heap.h: src/toolbox.h
 
-build/graph.o: src/graph.c src/graph.h src/list.h src/toolbox.h
+build/graph.o: src/graph.c src/graph.h src/list.h src/toolbox.h src/complexity.h
 	$(CC) $(CCFLAGS) -c src/graph.c -o build/graph.o
 
-build/list.o: src/list.c src/list.h src/toolbox.h
+build/list.o: src/list.c src/list.h src/toolbox.h src/complexity.h
 	$(CC) $(CCFLAGS) -c src/list.c -o build/list.o
 
 build/toolbox.o: src/toolbox.c src/toolbox.h 

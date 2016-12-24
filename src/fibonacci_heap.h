@@ -66,5 +66,8 @@ void linkRootNodes (FiboHeap* fibo_heap, Node* root_child, Node* root_father);
 
 void consolidateFiboHeap (FiboHeap* fibo_heap);
 Node* extractMinFromFiboHeap (FiboHeap* fibo_heap);
+void cutNodeInFiboHeap (FiboHeap* fibo_heap, Node* node_to_cut);
+void recursiveCutsInFiboHeap (FiboHeap* fibo_heap, Node* node_to_cut);
+void decreaseKeyInFiboHeap (FiboHeap* fibo_heap, Node* node, int new_key);
 
 #endif

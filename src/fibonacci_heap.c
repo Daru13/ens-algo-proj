@@ -493,3 +493,48 @@ Node* extractMinFromFiboHeap (FiboHeap* fibo_heap)
 
 	return min_element;
 }
+
+void cutNodeInFiboHeap (FiboHeap* fibo_heap, Node* node_to_cut)
+{
+	// The given node must have a father to be extracted from its children
+	assert(node_to_cut->father != NULL);
+
+	moveSubHeapToRoot(fibo_heap, node_to_cut);
+	node_to_cut->is_tagged = false;
+}
+
+void recursiveCutsInFiboHeap (FiboHeap* fibo_heap, Node* node_to_cut)
+{
+	Node* node_father = node_to_cut->father;
+	
+	// If the root is reached, the recursion must end
+	if (node_father == NULL) return;
+
+	if (node_to_cut->is_tagged == false)
+		node_to_cut->is_tagged = true;
+	else
+	{
+		cutNodeInFiboHeap(fibo_heap, node_to_cut);
+		recursiveCutsInFiboHeap(fibo_heap, node_father);
+	}
+}
+
+void decreaseKeyInFiboHeap (FiboHeap* fibo_heap, Node* node, int new_key)
+{
+	// The new key must be smaller than the current one
+	assert(new_key <= node->key);
+	node->key = new_key;
+
+	Node* node_father = node->father;
+
+	if (node_father != NULL
+	&&  node->key < node_father->key)
+	{
+		cutNodeInFiboHeap(fibo_heap, node);
+		recursiveCutsInFiboHeap(fibo_heap, node_father);
+	}
+
+	// If the root has become a room, it may be the new minimum element
+	if (new_key < fibo_heap->min_element->key)
+		fibo_heap->min_element = node;
+}

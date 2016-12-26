@@ -11,5 +11,6 @@
 
 int extractMinimumNaive(bool*,int*,int,int*);
 int* dijkstraNaive(Graph*,int, int*);
+int* dijkstra (Graph* g, int s);
 
 #endif

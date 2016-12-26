@@ -145,6 +145,8 @@ void testNodes_1 ()
 
 void testGraph_1 ()
 {
+	printProgressMessage("\n--------- TEST OF GRAPHS 1 ---------\n");
+
 	printProgressMessage("[Enter a graph (in the right format)]\n");
 	Graph* g = createGraphFromFile(stdin);
 	int compt = 0;
@@ -173,7 +175,7 @@ void testGraph_1 ()
 
 void testFibonacciHeaps_1 ()
 {
-printProgressMessage("\n--------- TEST OF FIBONACCI HEAPS 1 ---------\n");
+	printProgressMessage("\n--------- TEST OF FIBONACCI HEAPS 1 ---------\n");
 
 	//---------- Creation, insertion, min extraction (+ consolidatation) ----------
 
@@ -218,7 +220,7 @@ printProgressMessage("\n--------- TEST OF FIBONACCI HEAPS 1 ---------\n");
 
 void testFibonacciHeaps_2 ()
 {
-printProgressMessage("\n--------- TEST OF FIBONACCI HEAPS 2 ---------\n");
+	printProgressMessage("\n--------- TEST OF FIBONACCI HEAPS 2 ---------\n");
 
 	//---------- Extraction of several minimums with random nodes ----------
 
@@ -257,7 +259,7 @@ printProgressMessage("\n--------- TEST OF FIBONACCI HEAPS 2 ---------\n");
 
 void testFibonacciHeaps_3 ()
 {
-printProgressMessage("\n--------- TEST OF FIBONACCI HEAPS 3 ---------\n");
+	printProgressMessage("\n--------- TEST OF FIBONACCI HEAPS 3 ---------\n");
 
 	//---------- Key decreasing + minimum extraction ----------
 
@@ -306,15 +308,44 @@ printProgressMessage("\n--------- TEST OF FIBONACCI HEAPS 3 ---------\n");
 	free(nodes);
 }
 
+void testGraph_2 ()
+{
+	printProgressMessage("\n--------- TEST OF GRAPHS 2 ---------\n");
+
+	printProgressMessage("[Enter a graph (in the right format)]\n");
+	Graph* g = createGraphFromFile(stdin);
+	int compt = 0;
+
+	if (graphIsConnected(g, &compt))
+	{
+		printProgressMessage("[The graph is connected]\n");
+		// printf("fait en %d étapes \n" , compt);
+	
+		int origin = 0;
+		printProgressMessage("[Distances from vertice 0]\n");
+
+		int* res = dijkstra(g, origin);
+		for (int i = 0; i < g->nb_vertexes; i++)
+			printf("Distance from %d to %d is: %d\n", origin, i, res[i]);
+		//printf("fait en %d étapes \n" , compt);
+	}
+	else
+	{
+		printProgressMessage("[The graph is *NOT* connected]\n");
+		//printf("fait en %d étapes \n" , compt);
+	}
+}
+
 int main ()
 {
 	srand(time(0));
 
 	// testGraph_1();
 	// testNodes_1();
-	// testFibonacciHeaps_1();
-	// testFibonacciHeaps_2();
+	testFibonacciHeaps_1();
+	testFibonacciHeaps_2();
 	testFibonacciHeaps_3();
+	// testGraph_2();
 
 	printf("\nFinal complexity: %d basic operations have been carried out.\n",
 		COMPLEXITY);

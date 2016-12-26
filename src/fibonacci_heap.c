@@ -404,7 +404,7 @@ void consolidateFiboHeap (FiboHeap* fibo_heap)
 				current_degree_root 	= current_node_copy;
 
 				// Update the next node to visit to reflect this inversion
-				//next_node = current_node->next;				
+				next_node = current_node->next;				
 			}
 
 			// printf("\nWhile 2 (current degree = %d) ", current_degree);
@@ -420,7 +420,7 @@ void consolidateFiboHeap (FiboHeap* fibo_heap)
 
 			// Update of the control variables
 			node_has_been_linked = true;
-			// nb_roots--;
+			nb_roots--;
 
 			// printf("** Fin while 2 **\n");
 			// printFiboHeap(fibo_heap);

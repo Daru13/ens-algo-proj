@@ -10,53 +10,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
+#include <limits.h>
 #include "list.h"
 #include "toolbox.h"
 #include "complexity.h"
 #include "graph.h"
 #include "dijkstra.h"
 
-/*
-int* dijkstraNaive (Graph* g, int s) // O(#A²)
-{
-	int* lengths = malloc(g->nb_vertexes * sizeof(int));
-	CHECK_MALLOC(lengths);
-
-	bool seen[g->nb_vertexes];
-	for (int i = 0 ; i < g->nb_vertexes ; i++)
-		seen[i]= false;
-	
-	PrioList* F = createPrioList();
-	Prio p = {s , 0};
-	addElementToPrioList(F, p);
-
-	while (! prioListIsEmpty(F))
-	{
-		Prio x = extractMinFromPrioList(F);
-		if (! seen[x.elt])
-		{
-			int n = x.elt;
-			lengths[n] = x.key;
-			seen[n] = true;
-			Edge* EL = g->edges[n];
-
-			while (EL != NULL)
-			{
-				Edge ed = popFromList(EL);
-				Prio p  = {EL->destination, lengths[n] + EL->weight};
-				addElementToPrioList(F, p);
-				EL = EL->next;
-			}
-		}
-	}
-
-	return lengths;
-}
-*/
-
+// Unreachable length (all lengths are positive or null)
 #define INF_LENGTH -1
+#define MAX_LENGTH INT_MAX // the larger value a 32 bits signed integer can hold
 
-int extractMinimumNaive (bool* seen, int* lengths, int nb_vertexes, int*compt)
+//------------------------------------------------------------------------------
+// NAIVE DIJKSTRA (WITH AN ARRAY)
+//------------------------------------------------------------------------------
+
+int extractMinimumNaive (bool* seen, int* lengths, int nb_vertexes, int* compt)
 {
 	int i;
 	int min = -1;
@@ -64,8 +33,7 @@ int extractMinimumNaive (bool* seen, int* lengths, int nb_vertexes, int*compt)
 
 	// Find the minimum
 	for (i = 0; i < nb_vertexes; i++)
-	{
-		
+	{	
 		*compt = *compt +2;
 		if (lengths[i] != INF_LENGTH
 		&& !seen[i])
@@ -81,14 +49,12 @@ int extractMinimumNaive (bool* seen, int* lengths, int nb_vertexes, int*compt)
 				*compt = *compt + 1;
 				if (lengths[min] > lengths[i])
 				{
-				min = i;
-				*compt = *compt + 1;
+					min = i;
+					*compt = *compt + 1;
 				}
 			}
-
 		}
 	}
-
 
 	return min;
 }
@@ -101,7 +67,7 @@ int* dijkstraNaive (Graph* g, int s, int* compt) // O(#A²)
 	bool seen[g->nb_vertexes];
 	*compt = *compt + g->nb_vertexes;
 
-	for (int i = 0 ; i < g->nb_vertexes ; i++)
+	for (int i = 0 ; i < g->nb_vertexes; i++)
 	{
 		seen[i]    = false;
 		lengths[i] = INF_LENGTH;
@@ -120,14 +86,15 @@ int* dijkstraNaive (Graph* g, int s, int* compt) // O(#A²)
 			lengths, g->nb_vertexes, compt);
 		seen[min_elt] = true;
 		*compt = *compt + 1;
+
 		// Iteration over all min_elt's neighbours
 		Edge* current_edge = g->edges[min_elt];
 		*compt = *compt + 1;
 		while (current_edge != NULL)
 		{
-			// Each neighbour is added to the priority structure
 			int neighbour = current_edge->destination;
 			*compt = *compt + 1;
+
 			// Improve the lengths if possible
 			int weight = current_edge->weight;
 			*compt = *compt + 1;
@@ -146,3 +113,60 @@ int* dijkstraNaive (Graph* g, int s, int* compt) // O(#A²)
 	return lengths;
 }
 
+//------------------------------------------------------------------------------
+// OPTIMIZED DIJKSTRA (WITH A FIBONACCI HEAP)
+//------------------------------------------------------------------------------
+
+int* dijkstra (Graph* g, int s)
+{
+	// Initialization
+	int* lengths = malloc(g->nb_vertexes * sizeof(int));
+	CHECK_MALLOC(lengths);
+
+	FiboHeap* fibo_heap = createFiboHeap();
+
+	Node* vertexes[g->nb_vertexes];
+	int key;
+	for (int i = 0 ; i < g->nb_vertexes; i++)
+	{
+		// Every vertex but the origin s is assigned a very big key
+		key = i == s ? 0 : MAX_LENGTH;
+
+		vertexes[i] = createIsolatedNode(i, key);
+		insertRootInFiboHeap(fibo_heap, vertexes[i]);
+	}
+
+	// Main loop (over the Fibonacci heap's content, i.e. unseen vertexes)
+	for (int i = 0; i < g->nb_vertexes; i++)
+	{
+		// The element with the smallest distance is extracted
+		Node* extracted_min = extractMinFromFiboHeap(fibo_heap);
+		printFiboHeap(fibo_heap);
+		printf("Extracted min number %d:\n", i);
+		assert(extracted_min != NULL);
+		int min_vertex = extracted_min->value;
+
+		// Iteration over all min_vertex's neighbours
+		Edge* current_edge = g->edges[min_vertex];
+		while (current_edge != NULL)
+		{
+			int neighbour = current_edge->destination;
+
+			// Improve the lengths if possible (and update the heap if required)
+			int weight = current_edge->weight;
+			int new_length = lengths[min_vertex] + weight;
+
+			if (lengths[neighbour] == MAX_LENGTH
+			||  lengths[neighbour] > new_length)
+			{
+				lengths[neighbour] = new_length;
+				decreaseKeyInFiboHeap(fibo_heap, vertexes[neighbour], new_length);
+			}
+
+			current_edge = current_edge->next;
+		}
+	}
+
+	freeFiboHeap(fibo_heap);
+	return lengths;
+}

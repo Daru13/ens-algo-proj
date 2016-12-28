@@ -347,8 +347,5 @@ int main ()
 	testFibonacciHeaps_3();
 	testGraph_2();
 
-	printf("\nFinal complexity: %d basic operations have been carried out.\n",
-		COMPLEXITY);
-
 	return 0;
 }

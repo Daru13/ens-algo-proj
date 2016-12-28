@@ -18,7 +18,7 @@
 //------------------------------------------------------------------------------
 
 // Declaration and initialization of the global complexity variable
-unsigned int COMPLEXITY = 0;
+// unsigned int COMPLEXITY = 0;
 
 //------------------------------------------------------------------------------
 // FUNCTIONS FROM FILE "list.c"
@@ -236,7 +236,7 @@ int ComplexityOf_moveSubHeapToRoot (FiboHeap* fibo_heap, Node* sub_heap)
 
 int ComplexityOf_linkRootNodes (FiboHeap* fibo_heap, Node* root_child, Node* root_father)
 {
-	return ComplexityOf_extractNodeFromList(root_child);
+	return ComplexityOf_extractNodeFromList(root_child)
 		 + ComplexityOf_insertNodeAsChild(root_child, root_father)
 		 + 2;
 }

@@ -32,8 +32,6 @@ Node* createNode (NodeValue value, int key)
 	new_node->degree 	= 0;
 	new_node->is_tagged = false;
 
-	COMPLEXITY += 11;
-
 	return new_node;
 }
 
@@ -503,6 +501,9 @@ Node* extractMinFromFiboHeap (FiboHeap* fibo_heap)
 	{
 		// A (temporary) fake minimum element is used
 		fibo_heap->min_element = min_element_next;
+
+		printf("\n///////////// TAS DE FIBO AVANT CONSOLIDATION /////////////\n");
+		printFiboHeap(fibo_heap);
 
 		consolidateFiboHeap(fibo_heap);
 	}

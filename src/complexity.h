@@ -11,7 +11,7 @@
 #include "dijkstra.h"
 
 // Global variable which should be used as an accumulator for complexity computation
-extern unsigned int COMPLEXITY;
+// extern unsigned int COMPLEXITY;
 
 // Functions from file "list.c"
 int ComplexityOf_createList ();
@@ -19,7 +19,6 @@ int ComplexityOf_listIsEmpty ();
 int ComplexityOf_addElementToList ();
 int ComplexityOf_popFromList ();
 int ComplexityOf_concatTwoLists (List* L1, List* L2);
-
 
 // Functions from file "graph.c"
 int ComplexityOf_createEdge ();
@@ -47,7 +46,6 @@ int ComplexityOf_insertRootInFiboHeap (FiboHeap* fibo_heap, Node* new_root);
 int ComplexityOf_moveSubHeapToRoot (FiboHeap* fibo_heap, Node* sub_heap);
 int ComplexityOf_linkRootNodes (FiboHeap* fibo_heap, Node* root_child, Node* root_father);
 int ComplexityOf_consolidateFiboHeap (FiboHeap* fibo_heap);
-
 
 // Functions from file "dijkstra.c"
 int ComplexityOf_extractMinimumNaive (bool* seen, int* lengths, int nb_vertexes);

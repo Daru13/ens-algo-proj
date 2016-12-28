@@ -32,7 +32,7 @@ Node* createNode (NodeValue value, int key)
 	new_node->degree 	= 0;
 	new_node->is_tagged = false;
 
-	COMPLEXITY += 10;
+	COMPLEXITY += 11;
 
 	return new_node;
 }

@@ -17,10 +17,6 @@
 #include "graph.h"
 #include "dijkstra.h"
 
-// Unreachable length (all lengths are positive or null)
-#define INF_LENGTH -1
-#define MAX_LENGTH INT_MAX // the larger value a 32 bits signed integer can hold
-
 //------------------------------------------------------------------------------
 // NAIVE DIJKSTRA (WITH AN ARRAY)
 //------------------------------------------------------------------------------

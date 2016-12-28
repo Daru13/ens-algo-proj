@@ -16,7 +16,7 @@ build/main_test: src/main_test.c src/main_test.h $(OBJS)
 src/main_test.h: src/fibonacci_heap.h
 
 build/complexity.o: src/complexity.c src/complexity.h
-	$(CC) $(CCFLAGS) -O3 -c src/complexity.c -o build/complexity.o
+	$(CC) $(CCFLAGS) -O3 -Wno-unused-parameter -c src/complexity.c -o build/complexity.o
 
 src/complexity.h: src/list.h src/graph.h src/fibonacci_heap.h src/dijkstra.h
 

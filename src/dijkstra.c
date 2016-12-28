@@ -10,7 +10,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <limits.h>
 #include "list.h"
 #include "toolbox.h"
 #include "complexity.h"

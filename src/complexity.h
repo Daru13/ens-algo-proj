@@ -35,6 +35,7 @@ int ComplexityOf_freeNode (Node* node);
 int ComplexityOf_freeNodeTree (Node* root);
 int ComplexityOf_printNodeDetails (Node* node);
 int ComplexityOf_printListOfNodes (Node* node);
+
 int ComplexityOf_createFiboHeap ();
 int ComplexityOf_freeFiboHeap (FiboHeap* fibo_heap);
 int ComplexityOf_printFiboHeap (FiboHeap* fibo_heap);
@@ -43,6 +44,9 @@ int ComplexityOf_insertNodeInList (Node* node_to_insert, Node* destination);
 int ComplexityOf_mergeListsOfNodes (Node* to_merge, Node* destination);
 int ComplexityOf_insertNodeAsChild (Node* child, Node* father);
 int ComplexityOf_insertRootInFiboHeap (FiboHeap* fibo_heap, Node* new_root);
+int ComplexityOf_moveSubHeapToRoot (FiboHeap* fibo_heap, Node* sub_heap);
+int ComplexityOf_linkRootNodes (FiboHeap* fibo_heap, Node* root_child, Node* root_father);
+int ComplexityOf_consolidateFiboHeap (FiboHeap* fibo_heap);
 
 
 // Functions from file "dijkstra.c"

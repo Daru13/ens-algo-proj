@@ -370,18 +370,19 @@ void consolidateFiboHeap (FiboHeap* fibo_heap)
 	unsigned int nb_visited_roots = 0;
 	bool node_has_been_linked 	  = false;
 
-	while (nb_visited_roots < nb_roots
+	while (nb_visited_roots <= nb_roots
 	   ||  node_has_been_linked)
 	{
-		// Reset the control variable(s) and the per-degree nodes array
-		if (nb_visited_roots >= nb_roots)
+		// Reset the control variable(s)
+		if (nb_visited_roots > nb_roots)
 		{
 			nb_visited_roots = 0;
 			node_has_been_linked = false;
 		}
 
-		// printf("\n\nWhile 1: %d/%d [current_node info] ", nb_visited_roots, nb_roots);
-		// printNodeDetails(current_node);
+		printf("\n\nWhile 1: %d/%d [current_node info] ", nb_visited_roots, nb_roots);
+		printNodeDetails(current_node);
+		printFiboHeap(fibo_heap);
 
 		// Next node of the current one
 		next_node = current_node->next;
@@ -391,7 +392,7 @@ void consolidateFiboHeap (FiboHeap* fibo_heap)
 
 		while (roots_of_degree[current_degree] != NULL
 		   &&  roots_of_degree[current_degree] != current_node
-		   &&  current_node->father == NULL)
+		   /*&&  current_node->father == NULL*/)
 		{
 			// Root node having the same degree
 			Node* current_degree_root = roots_of_degree[current_degree];
@@ -404,14 +405,20 @@ void consolidateFiboHeap (FiboHeap* fibo_heap)
 				current_degree_root 	= current_node_copy;
 
 				// Update the next node to visit to reflect this inversion
-				next_node = current_node->next;				
+				// next_node = current_node->next;		
 			}
 
 			// printf("\nWhile 2 (current degree = %d) ", current_degree);
-			// printNodeDetails(current_node);
+			printf("\nAvant insertion:\n");
+			printNodeDetails(current_node);
+			printListOfNodes(current_node->child);
 			// printNodeDetails(current_degree_root);
 
 			linkRootNodes(fibo_heap, current_degree_root, current_node);
+
+			printf("\nAprès insertion:\n");
+			printNodeDetails(current_node);
+			printListOfNodes(current_node->child);
 
 			// The current degree don't have any associated node anymore,
 			// but the next degree must be checked
@@ -420,7 +427,7 @@ void consolidateFiboHeap (FiboHeap* fibo_heap)
 
 			// Update of the control variables
 			node_has_been_linked = true;
-			nb_roots--;
+			// nb_roots--;
 
 			// printf("** Fin while 2 **\n");
 			// printFiboHeap(fibo_heap);
@@ -430,7 +437,13 @@ void consolidateFiboHeap (FiboHeap* fibo_heap)
 		roots_of_degree[current_degree] = current_node;
 
 		// The next root becomes the new current one
-		current_node = next_node;
+		// current_node = next_node;
+	current_node = current_node->next;
+
+		printf("\nAvant assert:\n");
+			printNodeDetails(current_node);
+			printListOfNodes(current_node->child);
+		assert(current_node->father == NULL);
 
 		// Update of the control variables
 		nb_visited_roots++;
@@ -444,7 +457,7 @@ void consolidateFiboHeap (FiboHeap* fibo_heap)
 				fibo_heap->min_element = roots_of_degree[i];
 		}
 
-	// printf("\nFin de la consolidation :\n");
+	printf("\nFin de la consolidation :\n");
 	printFiboHeap(fibo_heap);
 	printf("----------------------------------------------------------\n");
 }

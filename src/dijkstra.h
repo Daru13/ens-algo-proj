@@ -6,6 +6,7 @@
 #define _DIJKSTRA_H
 
 #include "graph.h"
+#include <limits.h>
 
 // Unreachable length (all lengths are positive or null)
 #define INF_LENGTH -1

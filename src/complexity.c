@@ -56,51 +56,32 @@ int ComplexityOf_createEmptyGraph () { return 0; }
 int ComplexityOf_addUndirectedEdgeToGraph () { return 0; }
 int ComplexityOf_createGraphFromFile () { return 0; }
 
+int numberOfEdges (Graph* g)
+{
+	int res = 0;
+	for (int i = 0; i< g->nb_vertexes; i++)
+	{
+		Edge* courant = g->edges[i];
+		while ( courant != NULL)
+		{
+			res++;
+			courant = courant-> next;
+		}
+	}
+	return res/2;
+}
+
 int ComplexityOf_graphIsConnected (Graph* g) 
 {
-	int compt = 0; 
-    List* waiting = createList();
-    compt = compt + ComplexityOf_createList();
-	
-	addElementToList(waiting, 0);
-	compt += ComplexityOf_addElementToList();
- 
-    bool seen[g->nb_vertexes];
-	compt += g->nb_vertexes;
-
-    for (int i = 0 ; i < g->nb_vertexes; i++)
-     {
-         seen[i] = false;
-         (compt)++;
-     }
-     while (! listIsEmpty(waiting))
-     {
-         int nd = popFromList(waiting) ;
-         compt = compt +2;
-         if ( !seen[nd])
-         {
-            seen[nd] = true;
-            Edge* EL = g->edges[nd];
-            compt = compt +2;
-            while ( EL != NULL)
-            {
-                addElementToList (waiting, EL->destination);
-				compt += ComplexityOf_addElementToList();
-                EL = EL->next;
-                (compt)++;
-            }
- 
-        }
-    }
-
-    bool res = true;
-    (compt)++;
-    for (int i=0; i<g->nb_vertexes ; i++)
-    {
-         res = res && (seen[i]);
-         compt++;
-    }
-    return compt;
+	int res = 0;
+	int S = g->nb_vertexes;
+	int A = numberOfEdges(g);
+	res = 2+3*S
+		+2*A*(3+ComplexityOf_popFromList()+
+			  ComplexityOf_addElementToList())
+		+S*2
+		+1+S;
+	return res;
 }                                                                                            
 
 //------------------------------------------------------------------------------
@@ -368,91 +349,22 @@ int ComplexityOf_extractMinFromFiboHeap (FiboHeap* fibo_heap)
 // FUNCTIONS FROM FILE "dijkstra.c"
 //------------------------------------------------------------------------------
 
-int ComplexityOf_extractMinimumNaive (bool* seen, int* lengths, int nb_vertexes)
+int ComplexityOf_extractMinimumNaive (bool*seen, int*lengths, int nb_vertexes)
 {
-	int compt = 0;
-	int i;
-	int min = -1;
-	compt += 2;
-
-	for (i = 0; i < nb_vertexes; i++)
-	{
-		compt += 2;
-		if (lengths[i] != INF_LENGTH
-		&& !seen[i])
-		{
-			compt++;
-			if (min == -1)
-			{
-				min = i;
-				compt++;
-			} 
-			else 
-			{
-				compt++;
-				if (lengths[min] > lengths[i])
-				{
-					min = i;
-					compt++;
-				}
-			}
-		}
-	}
-
-	return compt;
+	int res = 0;
+	int S = nb_vertexes;
+	res = 1+S*6;
+	return res;
 }
 
 int ComplexityOf_dijkstraNaive (Graph* g, int s) // O(#A²)
 {
-	// Initialization
-	int compt = 0;
-	int* lengths = malloc(g->nb_vertexes * sizeof(int));
-	CHECK_MALLOC(lengths);
-	bool seen[g->nb_vertexes];
-	compt += g->nb_vertexes;
-	
-	for (int i = 0 ; i < g->nb_vertexes ; i++)
-	{
-		seen[i]    = false;
-		lengths[i] = INF_LENGTH;
-		compt += 2;
-	}
-	lengths[s]  = 0;
-	compt++;
-	
-	// Main loop (over the priority queue structure)
-	for (int i = 0; i<g->nb_vertexes;i++)
-	{
-		// The element with the smallest distance is extracted
-		int* useless;
-		int min_elt = extractMinimumNaive(seen,
-			lengths, g->nb_vertexes, useless);
-		compt += ComplexityOf_extractMinimumNaive(
-			seen,lengths, g->nb_vertexes);
-		seen[min_elt] = true;
-		compt++;
-		// Iteration over all min_elt's neighbours
-		Edge* current_edge = g->edges[min_elt];
-		compt++;
-		while (current_edge != NULL)
-		{
-			// Each neighbour is added to the priority structure
-			int neighbour = current_edge->destination;
-			compt++;
-			// Improve the lengths if possible
-			int weight = current_edge->weight;
-			compt++;
-					
-			compt += 2;
-			if (lengths[neighbour] == INF_LENGTH
-			||  lengths[neighbour] > lengths[min_elt] + weight)
-			{
-				lengths[neighbour] = lengths[min_elt] + weight;
-				compt++;
-			}
-			current_edge = current_edge->next;
-			compt++;
-		}
-	}
-	return compt;
+	int res = 0;
+	int S = g->nb_vertexes;
+	int A = numberOfEdges(g);
+	res = S*2
+		+2
+		+S*(ComplexityOf_extractMinimumNaive(NULL,NULL,S)+4)
+		+2*A*(5);
+	return res;
 }

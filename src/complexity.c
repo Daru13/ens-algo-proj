@@ -166,8 +166,9 @@ int ComplexityOf_insertNodeInList (Node* node_to_insert, Node* destination) { re
 int ComplexityOf_mergeListsOfNodes (Node* to_merge, Node* destination)
 {
 	int complexity = 8;
+
 	Node* to_merge_last_node = to_merge->previous;
-	Node* current_node = to_merge;
+	Node* current_node 		 = to_merge_last_node;
 
 	do
 	{

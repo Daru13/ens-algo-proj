@@ -252,7 +252,7 @@ void mergeListsOfNodes (Node* to_merge, Node* destination)
 
 	// Update all the inserted nodes' fathers
 	Node* new_father   = destination->father;
-	Node* current_node = to_merge;
+	Node* current_node = to_merge_last_node;
 
 	do
 	{

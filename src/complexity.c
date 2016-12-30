@@ -218,90 +218,30 @@ int ComplexityOf_moveSubHeapToRoot (FiboHeap* fibo_heap, Node* sub_heap)
 
 int ComplexityOf_linkRootNodes (FiboHeap* fibo_heap, Node* root_child, Node* root_father)
 {
-	return ComplexityOf_extractNodeFromList(root_child)
-		 + ComplexityOf_insertNodeAsChild(root_child, root_father)
+	return ComplexityOf_extractNodeFromList(root_child) // max. 11
+		 + ComplexityOf_insertNodeAsChild(root_child, root_father) // max. 9
 		 + 2;
 }
 
-/* NE TERMINE ET FONCTIONNE PROBABLEMENT PAS (besoin de réelles opérations) ! */
+// Worst-case complexity computation
+// Estimating the actual number of operations requires heavy operations on the data structure
 int ComplexityOf_consolidateFiboHeap (FiboHeap* fibo_heap)
 {
 	int complexity = 6;
 
-	Node* roots_of_degree[fibo_heap->nb_nodes];
-	for (unsigned int i = 0; i <= fibo_heap->nb_nodes; i++)
+	// Initialization
+	complexity += fibo_heap->nb_nodes;
+
+	// Main loop
+	for (int i = 0; i < fibo_heap->nb_nodes; i++)
 	{
-		roots_of_degree[i] = NULL;
-		complexity++;
-	}	
-
-	Node* current_node = fibo_heap->min_element;
-
-	// Variables used to control the upcoming loop
-	unsigned int nb_roots 		  = fibo_heap->degree;
-	unsigned int nb_visited_roots = 0;
-	bool node_has_been_linked 	  = false;
-
-	while (nb_visited_roots < nb_roots
-	   ||  node_has_been_linked)
-	{
-		complexity += 8;
-
-		if (nb_visited_roots >= nb_roots)
-		{
-			nb_visited_roots = 0;
-			node_has_been_linked = false;
-			complexity += 2;
-		}
-
-		unsigned int current_degree = current_node->degree;
-
-		while (roots_of_degree[current_degree] != NULL
-		   &&  roots_of_degree[current_degree] != current_node
-		   /*&&  current_node->father == NULL*/)
-		{
-			complexity += 7;
-
-			Node* current_degree_root = roots_of_degree[current_degree];
-
-			if (current_node->key > current_degree_root->key)
-			{
-				Node* current_node_copy = current_node;
-				current_node 			= current_degree_root;
-				current_degree_root 	= current_node_copy;
-
-				complexity += 3;	
-			}
-
-			complexity += ComplexityOf_linkRootNodes(fibo_heap,
-				current_degree_root, current_node);
-
-			roots_of_degree[current_degree] = NULL;
-			current_degree++;
-			node_has_been_linked = true;
-			// nb_roots--;
-		}
-
-		roots_of_degree[current_degree] = current_node;
-
-		current_node = current_node->next;
-		nb_visited_roots++;
+		// Worst-case upper bound of the second loop (over roots_of_degree)
+		complexity += fibo_heap->nb_nodes * (10
+										  +  22 /* max of linkRootNodes */);
 	}
 
-	complexity++;
-	for (unsigned int i = 0; i < fibo_heap->nb_nodes; i++)
-	{
-		complexity += 3;
-		if (roots_of_degree[i] != NULL)
-		{
-			complexity++;
-			if (roots_of_degree[i]->key < fibo_heap->min_element->key)
-			{
-				fibo_heap->min_element = roots_of_degree[i];
-				complexity++;
-			}
-		}
-	}
+	// Minimum-element update
+	complexity += 1 + (fibo_heap->nb_nodes * 5);
 
 	return complexity;
 }

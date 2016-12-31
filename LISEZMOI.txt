@@ -27,8 +27,7 @@ Le code est fortement commenté (en anglais), de façon à bien détailler les
 que la procédure de consolidation des tas, à priori source de nos problèmes...).
 
 ********************************************************************************
-
-*** CALCULS DE COMPLEXITE :
+CALCULS DE COMPLEXITE :
 
 Concernant les fonctions de calcul de complexité (complexity.c), la plupart
 sont correctes et réalistes, mais certaines utilisent des bornes supérieures
@@ -39,12 +38,15 @@ d'opérations utilisées par l'algorithme de Dijkstra optimisé.
 Les fonctions de consolidation, d'extraction du minimum, en particulier,
 nous ont posé problème...
 
-
-*** COMPILATION :
+********************************************************************************
+COMPILATION :
 
 Utiliser le programme "make" dans le répertoire principale.
 Les fichiers produits (objets et exécutables) se trouvent
 dans le dossier "build". Celui-ci DOIT EXISTER avant la compilation !
+
+Le compilateur utilisé est "clang", mais ceci peut-être aisément modifié
+au début du Makefile.
 
 Les commandes suivantes sont disponibles :
 - make test
@@ -62,8 +64,8 @@ utilisant les tas de Fibonacci, bien que celles celle-ci ne fonctionne pas
 - make
 Produit les trois différents exécutables mentionnés ci-dessus.
 
-
-*** SOURCES :
+********************************************************************************
+SOURCES :
 
 Les descriptions du contenu de chaque fichier sont brièvement faites
 au début de ceux-ci (du moins pour les fichiers .c). Les noms des fichiers

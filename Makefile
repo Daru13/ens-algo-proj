@@ -52,4 +52,6 @@ build/toolbox.o: src/toolbox.c src/toolbox.h
 # Cleaning rule(s)
 clean:
 	- rm build/main_test
+	- rm build/naive
+	- rm build/optimized
 	- rm build/*.o

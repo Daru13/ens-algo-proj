@@ -25,6 +25,6 @@ Edge* createEdge (int origin, int destination, int weight, Edge* next);
 Graph* createEmptyGraph (int nb_vertexes);
 void addUndirectedEdgeToGraph (Graph* graph, int source, int destination, int weight);
 Graph* createGraphFromFile (FILE* file);
-bool graphIsConnected (Graph* graph, int* compt);
+bool graphIsConnected (Graph* graph);
 
 #endif

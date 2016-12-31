@@ -1,6 +1,6 @@
 # DIJKSTRA WITH FIBONACCI HEAPS - 2016 Programming course project
 # Some compiling-related parameters
-CC = gcc
+CC = clang
 CCFLAGS = -g -W -Wall -pedantic -std=c99
 
 ##### THIS LIST MUST BE UPDATED #####
@@ -15,7 +15,7 @@ naive: build/naive
 optimized: build/optimized
 
 build/optimized: src/main.c $(OBJS)
-	$(CC) $(CCFLAGS) $(OBJS) src/main.c -o -D USE_OPTIMIZED_VERSION build/optimized 
+	$(CC) $(CCFLAGS) $(OBJS) src/main.c -DUSE_OPTIMIZED_VERSION -o build/optimized 
 
 build/naive: src/main.c $(OBJS)
 	$(CC) $(CCFLAGS) $(OBJS) src/main.c -o build/naive 

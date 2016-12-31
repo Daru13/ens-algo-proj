@@ -149,27 +149,21 @@ void testGraph_1 ()
 
 	printProgressMessage("[Enter a graph (in the right format)]\n");
 	Graph* g = createGraphFromFile(stdin);
-	int compt = 0;
 
-	if (graphIsConnected(g,&compt))
+	if (graphIsConnected(g))
 	{
 		printProgressMessage("[The graph is connected]\n");
-		printf("fait en %d étapes \n" , compt);
-
-		compt = 0;
 	
 		int origin = 0;
 		printProgressMessage("[Distances from vertice 0]\n");
 
-		int* res= dijkstraNaive(g, origin, &compt);
+		int* res= dijkstraNaive(g, origin);
 		for (int i = 0; i < g->nb_vertexes; i++)
 			printf("Distance from %d to %d is: %d\n", origin, i, res[i]);
-		printf("fait en %d étapes \n" , compt);
 	}
 	else
 	{
-		printProgressMessage("[The graph is *NOT* connected]\n");
-		printf("fait en %d étapes \n" , compt);
+		printProgressMessage("[The graph is NOT connected]\n");
 	}
 }
 
@@ -314,12 +308,10 @@ void testGraph_2 ()
 
 	printProgressMessage("[Enter a graph (in the right format)]\n");
 	Graph* g = createGraphFromFile(stdin);
-	int compt = 0;
 
-	if (graphIsConnected(g, &compt))
+	if (graphIsConnected(g))
 	{
 		printProgressMessage("[The graph is connected]\n");
-		// printf("fait en %d étapes \n" , compt);
 	
 		int origin = 0;
 		printProgressMessage("[Distances from vertice 0]\n");
@@ -327,12 +319,10 @@ void testGraph_2 ()
 		int* res = dijkstra(g, origin);
 		for (int i = 0; i < g->nb_vertexes; i++)
 			printf("Distance from %d to %d is: %d\n", origin, i, res[i]);
-		//printf("fait en %d étapes \n" , compt);
 	}
 	else
 	{
-		printProgressMessage("[The graph is *NOT* connected]\n");
-		//printf("fait en %d étapes \n" , compt);
+		printProgressMessage("[The graph is NOT connected]\n");
 	}
 }
 

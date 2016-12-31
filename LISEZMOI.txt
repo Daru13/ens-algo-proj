@@ -1,34 +1,71 @@
-*********************************************
-Projet d'algorithmique
+********************************************************************************
+Projet d'algorithmique (2016)
 Algorithme de Dijkstra et Tas de Fibonacci
-*********************************************
+********************************************************************************
 Camille GOBERT, Josselin GIET
-*********************************************
+********************************************************************************
 
-VEUILLEZ NOTER QUE CE PROJET EST INCOMPLET ET
-NE FONCTIONNE PAS !
+*** Seconde version ***
 
-Les tas des Fibonacci ne sont pas suffisament implémentées
-pour fonctionner, et nous n'avons ainsi pas eu le temps de nous
-concentrer sur la version naïve de Dijkstra et de la file de priorité,
-étant donné que nous souhaitions avant tout réaliser des tas de
-Fibonacci fonctionnels (sans succès).
+VEUILLEZ NOTER QUE LES TAS DE FIBONACCI FONCTIONNENT MAL
+EN CONSEQUENCE, L'ALGORITHME DE DIJKSTRA LES UTILISANT NE FONCTIONNE
+A PRIORI PAS. IL Y A EGALEMENT QUELQUES SOUCIS DE CALCUL DE COMPLEXITE.
 
-Cependant, la majorité du code est écrit, et il reste surtout à
-corriger quelques problèmes, et implémenter ce qu'il manque.
-Les calculs de complexité ne sont également pas encore présents, étant
-donné que nous pensions tous les écrire une fois le programme entièrement
-fonctionnel...
+Suite à un premier envoi à Zhentao Li, voici notre second envoi,
+bien plus complet et travaillé que le premier. Cependant, malgré tous nos
+efforts, nous n'avons pas réussi/eu le temps de réellement résoudre
+nos problèmes avec les tas de Fibonacci, malgré une réécriture du code.
+En conséquence, l'algorithme de Dijkstra optimisé ne fonctionne pas, bien qu'il
+soit écrit (voir dijkstra.c).
 
-*********************************************
+Nous avons cependant ajouté une interface pour utiliser les algorithmes,
+les fonctions de calculs de complexités demandées, réécrit le code par morceaux,
+et rendu l'algorithme de DIjkstra naïf et le test de connexité fonctionnels.
 
-COMPILATION :
-Utiliser la commande "make" dans le répertoire principale.
-Les fichiers produits (y compris l'exécutable de test) se trouvent
-dans le dossier "build".
+Le code est fortement commenté (en anglais), de façon à bien détailler les
+étapes que nous avons suivi (en particulier dans les fonctions complexes, telles
+que la procédure de consolidation des tas, à priori source de nos problèmes...).
 
-SOURCES :
+********************************************************************************
+
+*** CALCULS DE COMPLEXITE :
+
+Concernant les fonctions de calcul de complexité (complexity.c), la plupart
+sont correctes et réalistes, mais certaines utilisent des bornes supérieures
+(notamment lorsque des opérations sur les Tas de Fibonacci sont requises).
+
+Ceci est détaillé dans le code, mais empêche un calcul réaliste du nombre
+d'opérations utilisées par l'algorithme de Dijkstra optimisé.
+Les fonctions de consolidation, d'extraction du minimum, en particulier,
+nous ont posé problème...
+
+
+*** COMPILATION :
+
+Utiliser le programme "make" dans le répertoire principale.
+Les fichiers produits (objets et exécutables) se trouvent
+dans le dossier "build". Celui-ci DOIT EXISTER avant la compilation !
+
+Les commandes suivantes sont disponibles :
+- make test
+Produit un exécutable utile pour tester différentes paties du code,
+nommé "main_test".
+
+- make naive
+- make optimized
+Ces deux commandes produisent une interface pour utiliser l'algorithme de
+Dijkstra sur un graphe entré dans le terminal ; respectivement, en utilisant
+la version naïve (exécutable "naive"), ou la version optimisée
+utilisant les tas de Fibonacci, bien que celles celle-ci ne fonctionne pas
+(exécutable "optimized").
+
+- make
+Produit les trois différents exécutables mentionnés ci-dessus.
+
+
+*** SOURCES :
+
 Les descriptions du contenu de chaque fichier sont brièvement faites
 au début de ceux-ci (du moins pour les fichiers .c). Les noms des fichiers
-sont également censés être relativement explicites.
-
+sont également censés être relativement explicites ; et les commentaires
+expliquent souvent notre raisonnement, des détails, problèmes rencontrés...

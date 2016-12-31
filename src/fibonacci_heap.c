@@ -377,11 +377,11 @@ void consolidateFiboHeap (FiboHeap* fibo_heap)
 			nb_visited_roots = 0;
 			node_has_been_linked = false;
 		}
-
+/*
 		printf("\n\nWhile 1: %d/%d [current_node info] ", nb_visited_roots, nb_roots);
 		printNodeDetails(current_node);
 		printFiboHeap(fibo_heap);
-
+*/
 		// Next node of the current one
 		next_node = current_node->next;
 
@@ -405,19 +405,18 @@ void consolidateFiboHeap (FiboHeap* fibo_heap)
 				// Update the next node to visit to reflect this inversion
 				// next_node = current_node->next;		
 			}
-
-			// printf("\nWhile 2 (current degree = %d) ", current_degree);
+/*
 			printf("\nAvant insertion:\n");
 			printNodeDetails(current_node);
 			printListOfNodes(current_node->child);
 			// printNodeDetails(current_degree_root);
-
+*/
 			linkRootNodes(fibo_heap, current_degree_root, current_node);
-
+/*
 			printf("\nAprès insertion:\n");
 			printNodeDetails(current_node);
 			printListOfNodes(current_node->child);
-
+*/
 			// The current degree don't have any associated node anymore,
 			// but the next degree must be checked
 			roots_of_degree[current_degree] = NULL;
@@ -426,9 +425,6 @@ void consolidateFiboHeap (FiboHeap* fibo_heap)
 			// Update of the control variables
 			node_has_been_linked = true;
 			// nb_roots--;
-
-			// printf("** Fin while 2 **\n");
-			// printFiboHeap(fibo_heap);
 		}
 
 		// Set current_node as the only node of current_degree
@@ -438,9 +434,7 @@ void consolidateFiboHeap (FiboHeap* fibo_heap)
 		// current_node = next_node;
 	current_node = current_node->next;
 
-		printf("\nAvant assert:\n");
-			printNodeDetails(current_node);
-			printListOfNodes(current_node->child);
+		// BUG HERE: This assertion should never fail, but sometimes do!
 		assert(current_node->father == NULL);
 
 		// Update of the control variables
@@ -455,9 +449,9 @@ void consolidateFiboHeap (FiboHeap* fibo_heap)
 				fibo_heap->min_element = roots_of_degree[i];
 		}
 
-	printf("\nFin de la consolidation :\n");
-	printFiboHeap(fibo_heap);
-	printf("----------------------------------------------------------\n");
+	// printf("\nFin de la consolidation :\n");
+	// printFiboHeap(fibo_heap);
+	// printf("----------------------------------------------------------\n");
 }
 
 Node* extractMinFromFiboHeap (FiboHeap* fibo_heap)
@@ -472,16 +466,19 @@ Node* extractMinFromFiboHeap (FiboHeap* fibo_heap)
 	Node* current_child 	 = min_element->child;
 	unsigned int nb_children = min_element->degree;
 
-	// printf("\nExtract min (%p : %d) of degree %d\n",
-	//	(void*) min_element, min_element->key, min_element->degree);
+/*
+	printf("\nExtract min (%p : %d) of degree %d\n",
+		(void*) min_element, min_element->key, min_element->degree);
+*/
 
 	for (unsigned int i = 0; i < nb_children; i++)
 	{
 		current_child = current_child->next;
 		moveSubHeapToRoot(fibo_heap, current_child->previous);
-
-		// printf("Liste enfants après extraction %d (extract min):\n", i);
-		// printListOfNodes(current_child);
+/*
+		printf("Liste enfants après extraction %d (extract min):\n", i);
+		printListOfNodes(current_child);
+*/
 	}
 
 	// The minimum element is extracted from the roots
@@ -502,8 +499,7 @@ Node* extractMinFromFiboHeap (FiboHeap* fibo_heap)
 		// A (temporary) fake minimum element is used
 		fibo_heap->min_element = min_element_next;
 
-		printf("\n///////////// TAS DE FIBO AVANT CONSOLIDATION /////////////\n");
-		printFiboHeap(fibo_heap);
+		// printFiboHeap(fibo_heap);
 
 		consolidateFiboHeap(fibo_heap);
 	}

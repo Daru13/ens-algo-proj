@@ -143,6 +143,7 @@ int ComplexityOf_freeFiboHeap (FiboHeap* fibo_heap)
 
 int ComplexityOf_printFiboHeap (FiboHeap* fibo_heap) { return 0; }
 
+// Upper-bound: 11
 int ComplexityOf_extractNodeFromList (Node* node)
 {	
 	int complexity = 2;
@@ -180,6 +181,7 @@ int ComplexityOf_mergeListsOfNodes (Node* to_merge, Node* destination)
 	return complexity;
 }
 
+// Upper-bound: 9
 int ComplexityOf_insertNodeAsChild (Node* child, Node* father)
 {
 	int complexity = 4;
@@ -192,6 +194,7 @@ int ComplexityOf_insertNodeAsChild (Node* child, Node* father)
 	return complexity;
 }
 
+// Upper-bound: 11
 int ComplexityOf_insertRootInFiboHeap (FiboHeap* fibo_heap, Node* new_root)
 {
 	int complexity = 3;
@@ -209,13 +212,15 @@ int ComplexityOf_insertRootInFiboHeap (FiboHeap* fibo_heap, Node* new_root)
 	return complexity;
 }
 
+// Upper-bound: 19
 int ComplexityOf_moveSubHeapToRoot (FiboHeap* fibo_heap, Node* sub_heap)
 {
-	return ComplexityOf_extractNodeFromList(sub_heap)
-		 + ComplexityOf_insertNodeInList(sub_heap, fibo_heap->min_element)
+	return ComplexityOf_extractNodeFromList(sub_heap) // max. 11
+		 + ComplexityOf_insertNodeInList(sub_heap, fibo_heap->min_element) // max. 5
 		 + 3;
 }
 
+// Upper-bound: 22
 int ComplexityOf_linkRootNodes (FiboHeap* fibo_heap, Node* root_child, Node* root_father)
 {
 	return ComplexityOf_extractNodeFromList(root_child) // max. 11
@@ -233,12 +238,9 @@ int ComplexityOf_consolidateFiboHeap (FiboHeap* fibo_heap)
 	complexity += fibo_heap->nb_nodes;
 
 	// Main loop
-	for (int i = 0; i < fibo_heap->nb_nodes; i++)
-	{
-		// Worst-case upper bound of the second loop (over roots_of_degree)
-		complexity += fibo_heap->nb_nodes * (10
-										  +  22 /* max of linkRootNodes */);
-	}
+	// Includes worst-case upper bound of the second loop (over roots_of_degree)
+	complexity += fibo_heap->nb_nodes
+				* fibo_heap->nb_nodes * (10 + 22 /* max of linkRootNodes */);
 
 	// Minimum-element update
 	complexity += 1 + (fibo_heap->nb_nodes * 5);
@@ -246,45 +248,81 @@ int ComplexityOf_consolidateFiboHeap (FiboHeap* fibo_heap)
 	return complexity;
 }
 
-/* NE TERMINE ET FONCTIONNE PROBABLEMENT PAS (besoin de réelles opérations) ! */
+// Worst-case complexity computation
 int ComplexityOf_extractMinFromFiboHeap (FiboHeap* fibo_heap)
 {
-	int complexity = 9;
-
+	int complexity = 1;
 	Node* min_element = fibo_heap->min_element;
 
-	// If the minimum element does not exist, nothing else to do
 	if (min_element == NULL)
 		return complexity + 1;
 
-	Node* current_child 	 = min_element->child;
+	complexity += 8;
+
 	unsigned int nb_children = min_element->degree;
 
-	complexity++;
-	for (unsigned int i = 0; i < nb_children; i++)
-	{
-		current_child = current_child->next;
-		complexity += ComplexityOf_moveSubHeapToRoot(fibo_heap, current_child->previous)
-					+ 3;
-	}
-
+	// Upper bound for the loop over all the children
+	complexity += 1
+				+ nb_children * (19 + 3); 
 	complexity += ComplexityOf_extractNodeFromList(min_element);
 
-	// If the Fibonacci heap only had one root, it now is empty
 	if (fibo_heap->degree == 0)
 		complexity++;
+	else
+		complexity += ComplexityOf_consolidateFiboHeap(fibo_heap)
+					+ 1;
+
+	return complexity;
+}
+
+// Upper-bound: 21
+int ComplexityOf_cutNodeInFiboHeap (FiboHeap* fibo_heap, Node* node_to_cut)
+{
+	return 2
+		 + ComplexityOf_moveSubHeapToRoot(fibo_heap, node_to_cut);
+}
+
+// Upper-bound: ???
+// Using the total number of nodes would totally fake the results...
+int ComplexityOf_recursiveCutsInFiboHeap (FiboHeap* fibo_heap, Node* node_to_cut)
+{
+	int complexity = 2;
+	Node* node_father = node_to_cut->father;
 	
-	// Otherwise, the Fibonacci heap must be consolidated
+	if (node_father == NULL)
+		return complexity;
+
+	complexity++;
+	if (node_to_cut->is_tagged == false)
+		complexity++;
 	else
 	{
-		complexity += ComplexityOf_consolidateFiboHeap(fibo_heap)
-				    + 1;
+		complexity += ComplexityOf_cutNodeInFiboHeap(fibo_heap, node_to_cut)
+					+ ComplexityOf_recursiveCutsInFiboHeap(fibo_heap, node_father);
 	}
 
 	return complexity;
 }
 
-/* FONCTIONS DE DIMINUTION DE NOEUD MANQUANTES */
+// Upper-bound: ??? (because of recursion, see above function)
+// Using the total number of nodes would totally fake the results...
+int ComplexityOf_decreaseKeyInFiboHeap (FiboHeap* fibo_heap, Node* node, int new_key)
+{
+	int complexity = 6;
+	Node* node_father = node->father;
+
+	if (node_father != NULL
+	&&  new_key < node_father->key)
+	{
+		complexity += ComplexityOf_cutNodeInFiboHeap(fibo_heap, node)
+					+ ComplexityOf_recursiveCutsInFiboHeap(fibo_heap, node_father);
+	}
+
+	if (new_key < fibo_heap->min_element->key)
+		complexity++;
+
+	return complexity;
+}
 
 //------------------------------------------------------------------------------
 // FUNCTIONS FROM FILE "dijkstra.c"
@@ -308,4 +346,46 @@ int ComplexityOf_dijkstraNaive (Graph* g, int s) // O(#A²)
 		+S*(ComplexityOf_extractMinimumNaive(NULL,NULL,S)+4)
 		+2*A*(5);
 	return res;
+}
+
+// Upper bound of the real complexity!
+// Partially using worst-case complexities (because of Fibonacci heaps)
+
+/* Please note:
+
+   This complexity computation is INCOMPLETE and (thus) UNREALISTIC!
+   It misses two upper-bound approximations (relying on data structures which
+   are not built here). The computed complexity thus is probably below the real
+   one, given that the two ommited complexities concern important functions
+   called by this optimized algorithm!
+*/
+int ComplexityOf_dijkstra (Graph* g, int s)
+{
+	// Initialization
+	int complexity = 2
+				   + ComplexityOf_createFiboHeap()
+				   + 2
+				   + 1
+				   + g->nb_vertexes * (5 // Fibonacci heap initialization
+				   					+  ComplexityOf_createIsolatedNode(0, 0)
+				   					+  11 /* max. of insertRootInFiboHeap */);
+
+	// Main loop of Dijkstra's algorithm
+	complexity += 1
+				+ g->nb_vertexes * (1
+								 /* MISSING max. of extractMinFromFiboHeap */
+								 +  2);
+
+	// Simulate the while loop (each vertex is reviewed once)
+	int nb_edges = numberOfEdges(g);
+	complexity += nb_edges * (1
+						   +  6
+						   +  1
+						   /* MISSING max. of decreaseKeyInFiboHeap */
+						   +  1);
+
+	// Approximation for Fibonacci heap freeing (since none is built)
+	complexity += g->nb_vertexes * (5 + ComplexityOf_freeNode(NULL)) + 1;
+
+	return complexity;
 }

@@ -46,9 +46,13 @@ int ComplexityOf_insertRootInFiboHeap (FiboHeap* fibo_heap, Node* new_root);
 int ComplexityOf_moveSubHeapToRoot (FiboHeap* fibo_heap, Node* sub_heap);
 int ComplexityOf_linkRootNodes (FiboHeap* fibo_heap, Node* root_child, Node* root_father);
 int ComplexityOf_consolidateFiboHeap (FiboHeap* fibo_heap);
+int ComplexityOf_cutNodeInFiboHeap (FiboHeap* fibo_heap, Node* node_to_cut);
+int ComplexityOf_recursiveCutsInFiboHeap (FiboHeap* fibo_heap, Node* node_to_cut);
+int ComplexityOf_decreaseKeyInFiboHeap (FiboHeap* fibo_heap, Node* node, int new_key);
 
 // Functions from file "dijkstra.c"
 int ComplexityOf_extractMinimumNaive (bool* seen, int* lengths, int nb_vertexes);
 int ComplexityOf_dijkstraNaive (Graph* g, int s);
+int ComplexityOf_dijkstra (Graph* g, int s);
 
 #endif

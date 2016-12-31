@@ -345,7 +345,7 @@ int main ()
 	testFibonacciHeaps_1();
 	testFibonacciHeaps_2();
 	testFibonacciHeaps_3();
-	testGraph_2();
+	// testGraph_2();
 
 	return 0;
 }

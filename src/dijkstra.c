@@ -136,9 +136,12 @@ int* dijkstra (Graph* g, int s)
 	{
 		// The element with the smallest distance is extracted
 		Node* extracted_min = extractMinFromFiboHeap(fibo_heap);
+
+/*	
 		printFiboHeap(fibo_heap);
 		printf("Extracted min number %d:\n", i);
 		assert(extracted_min != NULL);
+*/
 		int min_vertex = extracted_min->value;
 
 		// Iteration over all min_vertex's neighbours

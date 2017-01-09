@@ -1,0 +1,16 @@
+let () = 
+	let n = read_int()
+	and p = read_float ()
+	and e_list = ref [] 
+	and aux (i,j,l) =
+		Printf.printf "%d %d %d" i j l 
+	in begin
+		for i = 0 to n-1 do
+			for j = i+1 to n-1 do
+				if Random.float 1. < p then
+					e_list := (i,j,Random.int 11)::!e_list
+			done
+		done;
+		Printf.printf "%d %d" n (List.length !e_list);
+		List.iter aux !e_list;
+	end

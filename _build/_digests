@@ -1,0 +1,4 @@
+"Resource: /home/josselin/Documents/Info/Algorithme et programmation/Projet/ens-algo-proj/create_graph.ml": "f\128r\164<\247'{EOD\001\240\204\148L"
+"Rule: ocaml dependencies ml (%=create_graph )": "\196t\014\188\136M\004o5\132a\168\006^[\162"
+"Rule: ocaml: cmo* -> byte (%=create_graph )": "1\142\212YW\222P\198\179\159\019\002i\215\169j"
+"Rule: ocaml: ml -> cmo & cmi (%=create_graph )": ",\194\236\2435D\248\168H-\251\217\139\216d\185"

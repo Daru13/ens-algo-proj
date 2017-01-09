@@ -1,14 +1,14 @@
 # DIJKSTRA WITH FIBONACCI HEAPS - 2016 Programming course project
 # Some compiling-related parameters
-CC = clang
+CC = gcc
 CCFLAGS = -g -W -Wall -pedantic -std=c99
 
 ##### THIS LIST MUST BE UPDATED #####
 # List of all  object files which must be produced before any binary
-OBJS = build/dijkstra.o build/fibonacci_heap.o build/graph.o build/list.o build/toolbox.o build/complexity.o
+OBJS = build/dijkstra.o build/fibonacci_heap.o build/graph.o build/list.o build/toolbox.o build/complexity.o 
 
 # Dependencies and compiling rules
-all: build/main_test build/naive build/optimized build/generator
+all: build/main_test build/naive build/optimized build/generator build/test_aut
 
 test: build/main_test
 naive: build/naive
@@ -26,6 +26,9 @@ build/main_test: src/main_test.c src/main_test.h $(OBJS)
 
 build/generator: src/graph_gen.c src/graph_gen.h build/toolbox.o # $(OBJS)
 	$(CC) $(CCFLAGS) $(OBJS) -O3 src/graph_gen.c -o build/generator 
+
+build/test_aut: src/test.c src/test.h $(OBJS)
+	$(CC) $(CCFLAGS) $(OBJS)  -c src/test.c -o build/test
 
 src/main_test.h: src/fibonacci_heap.h
 
@@ -52,6 +55,7 @@ build/list.o: src/list.c src/list.h src/toolbox.h src/complexity.h
 
 build/toolbox.o: src/toolbox.c src/toolbox.h 
 	$(CC) $(CCFLAGS) -c src/toolbox.c -o build/toolbox.o
+
 
 # Cleaning rule(s)
 clean:

@@ -1,0 +1,8 @@
+### Starting build.
+# Target: create_graph.ml.depends, tags: { extension:ml, file:create_graph.ml, ocaml, ocamldep, quiet }
+/usr/bin/ocamldep -modules create_graph.ml > create_graph.ml.depends
+# Target: create_graph.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:create_graph.cmo, file:create_graph.ml, implem, ocaml, quiet }
+/usr/bin/ocamlc -c -o create_graph.cmo create_graph.ml
+# Target: create_graph.byte, tags: { byte, dont_link_with, extension:byte, file:create_graph.byte, link, ocaml, program, quiet }
+/usr/bin/ocamlc create_graph.cmo -o create_graph.byte
+# Compilation successful.

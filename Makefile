@@ -8,11 +8,12 @@ CCFLAGS = -g -W -Wall -pedantic -std=c99
 OBJS = build/dijkstra.o build/fibonacci_heap.o build/graph.o build/list.o build/toolbox.o build/complexity.o
 
 # Dependencies and compiling rules
-all: build/main_test build/naive build/optimized
+all: build/main_test build/naive build/optimized build/generator
 
 test: build/main_test
 naive: build/naive
 optimized: build/optimized
+generator: build/generator
 
 build/optimized: src/main.c $(OBJS)
 	$(CC) $(CCFLAGS) $(OBJS) src/main.c -DUSE_OPTIMIZED_VERSION -o build/optimized 
@@ -21,7 +22,10 @@ build/naive: src/main.c $(OBJS)
 	$(CC) $(CCFLAGS) $(OBJS) src/main.c -o build/naive 
 
 build/main_test: src/main_test.c src/main_test.h $(OBJS)
-	$(CC) $(CCFLAGS) $(OBJS) src/main_test.c -o build/main_test 
+	$(CC) $(CCFLAGS) $(OBJS) src/main_test.c -o build/main_test
+
+build/generator: src/graph_gen.c src/graph_gen.h build/toolbox.o # $(OBJS)
+	$(CC) $(CCFLAGS) $(OBJS) -O3 src/graph_gen.c -o build/generator 
 
 src/main_test.h: src/fibonacci_heap.h
 

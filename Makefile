@@ -1,6 +1,6 @@
 # DIJKSTRA WITH FIBONACCI HEAPS - 2016 Programming course project
 # Some compiling-related parameters
-CC = clang
+CC = gcc
 CCFLAGS = -g -W -Wall -pedantic -std=c99
 
 ##### THIS LIST MUST BE UPDATED #####

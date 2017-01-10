@@ -116,7 +116,7 @@ int main (int argc, char* argv[])
 		clock_gettime(CLOCK_REALTIME, &end_time);
 
 		connectivity_total_time 	  += getTimeDifferenceInMs(&start_time, &end_time);
-		connectivity_total_complexity += ComplexityOf_graphIsConnected(graph);
+		connectivity_total_complexity += COMPLEXITY;
 
 		if (is_connected)
 		{
@@ -128,7 +128,7 @@ int main (int argc, char* argv[])
 			clock_gettime(CLOCK_REALTIME, &start_time);
 
 			naive_dijkstra_total_time 		+= getTimeDifferenceInMs(&start_time, &end_time);
-			naive_dijkstra_total_complexity += ComplexityOf_dijkstraNaive(graph, origin_vertex);
+			naive_dijkstra_total_complexity += COMPLEXITY;
 
 
 			// Optimized Dijkstra's algorithm

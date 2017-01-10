@@ -110,32 +110,45 @@ bool graphIsConnected (Graph* g)
 {
 	List* waiting = createList();
 	addElementToList(waiting, 0);
+	COMPLEXITY = 9;
 
 	bool seen[g->nb_vertexes];
+	COMPLEXITY += g->nb_vertexes;
+
 	for (int i = 0 ; i < g->nb_vertexes; i++)
 	{
 		seen[i] = false;
+		COMPLEXITY ++;
 	}
 	while (! listIsEmpty(waiting))
 	{
+		COMPLEXITY ++;
 		int nd = popFromList(waiting);
+		COMPLEXITY += 3;
+
+		COMPLEXITY ++;
 		if ( !seen[nd])
 		{
 			seen[nd] = true;
 			Edge* EL = g->edges[nd];
+			COMPLEXITY += 3;
 			while (EL != NULL)
 			{
 				addElementToList (waiting, EL->destination);
 				EL = EL->next;
+				COMPLEXITY += 5+1;
 			}
 
 		}
 	}
 
 	bool res = true;
+	COMPLEXITY ++;
+
 	for (int i=0; i<g->nb_vertexes ; i++)
 	{
 		res = res && (seen[i]);
+		COMPLEXITY ++;
 	}
 	
 	return res;

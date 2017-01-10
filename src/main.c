@@ -42,6 +42,8 @@ int main ()
 		nb_var_read = scanf("%d", &origin);
 	while (nb_var_read != 1);
 
+	printf("AAA\n");
+
 	connectivity_complexity += ComplexityOf_graphIsConnected(graph);
 	if (graphIsConnected(graph))
 	{

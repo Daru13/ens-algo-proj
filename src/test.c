@@ -13,16 +13,16 @@
 #include "graph.h"
 #include "dijkstra.h"
 
-
 void printUsageAndExit (char* argv[])
 {
 	fprintf(stderr,
-			"Usage: %s <nb vertices [1-]> <density (0-1)> <min weight> <max weight> <nb_try>\n",
+			"Usage: %s <base path> <nb graphs>\n",
 			argv[0]);
 	exit(1);
 }
 
-Graph* createRandomGraph(int nb_vertices,double density,int min_weight,int max_weight)
+/*
+Graph* createRandomGraph(int nb_vertices, double density, int min_weight, int max_weight)
 {
 	
 	FILE* fp = fopen("file_a_la_con.txt","w+");
@@ -36,6 +36,8 @@ Graph* createRandomGraph(int nb_vertices,double density,int min_weight,int max_w
 	printGraph(fp, edges, nb_vertices, nb_edges, no_edge_weight);
 	return createGraphFromFile(fp);
 }
+*/
+
 
 
 int main (int argc, char* argv[])
@@ -96,13 +98,13 @@ int main (int argc, char* argv[])
 	double com_moy_dij_n = res_dij_n/nb_try;	
 	double com_moy_dij_f = res_dij_f/nb_try;
 
-	fprintf(stderr,"nb de tests   : %d\n",nb_try);
-	fprintf(stderr,"nb de sommets : %d\n",nb_vertices);
-	fprintf(stderr,"densité       : %lf\n",density);
-	fprintf(stderr,"taux de graphes connexes      : %lf\n",ratio_con);
-	fprintf(stderr,"compléxité moyenne pour le test de connexité : %lf\n",com_moy_con);
-	fprintf(stderr,"compléxité moyenne pour le l'algo naîf       : %lf\n",com_moy_dij_n);
-	fprintf(stderr,"compléxité moyenne pour le les tas de fibo   : %lf\n",com_moy_dij_f);
+	fprintf(stderr,"nb de tests   : %d\n", nb_try);
+	fprintf(stderr,"nb de sommets : %d\n", nb_vertices);
+	fprintf(stderr,"densité       : %lf\n", density);
+	fprintf(stderr,"taux de graphes connexes      : %lf\n", ratio_con);
+	fprintf(stderr,"compléxité moyenne pour le test de connexité : %lf\n", com_moy_con);
+	fprintf(stderr,"compléxité moyenne pour le l'algo naîf       : %lf\n", com_moy_dij_n);
+	fprintf(stderr,"compléxité moyenne pour le les tas de fibo   : %lf\n", com_moy_dij_f);
 	return 0;
 }
 

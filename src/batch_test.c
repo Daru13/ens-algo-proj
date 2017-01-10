@@ -181,49 +181,7 @@ int main (int argc, char* argv[])
 	fprintf(stderr, "Average optimized test time   : %lf\n",
 		average_optimized_dijkstra_time);
 
-/*
-	int res_con = 0;
-	int res_dij_f = 0;
-	int res_dij_n = 0;
-	int nb_con = 0;
-
-	for(int i=0;i<nb_try;i++)
-	{
-		printf("Graphe en cours num %d",i);		
-		Graph* g = createRandomGraph(nb_vertices,density,min_weight,max_weight);
-			
-	
-		res_con += ComplexityOf_graphIsConnected(g);
-		if (graphIsConnected(g))
-		{
-			
-			nb_con ++;
-			
-			//int* distances = dijkstra(graph, origin);
-			res_dij_f += ComplexityOf_dijkstra(g, 0);
-			
-			//int* distances = dijkstraNaive(graph, origin);
-			nb_con += ComplexityOf_dijkstraNaive(g, 0);
-
-		
-		}
-		
-	}
-
-	double ratio_con = nb_con/nb_try;
-	double com_moy_con = res_con/nb_try;
-	double com_moy_dij_n = res_dij_n/nb_try;	
-	double com_moy_dij_f = res_dij_f/nb_try;
-
-	fprintf(stderr,"nb de tests   : %d\n", nb_try);
-	fprintf(stderr,"nb de sommets : %d\n", nb_vertices);
-	fprintf(stderr,"densité       : %lf\n", density);
-	fprintf(stderr,"taux de graphes connexes      : %lf\n", ratio_con);
-	fprintf(stderr,"compléxité moyenne pour le test de connexité : %lf\n", com_moy_con);
-	fprintf(stderr,"compléxité moyenne pour le l'algo naîf       : %lf\n", com_moy_dij_n);
-	fprintf(stderr,"compléxité moyenne pour le les tas de fibo   : %lf\n", com_moy_dij_f);
-	return 0;
-*/
+	fprintf(stderr, "\n(Test) Value of COMPLEXITY variable: %ld\n", COMPLEXITY);
 
 	return 0; 
 }

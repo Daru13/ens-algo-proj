@@ -18,7 +18,7 @@
 //------------------------------------------------------------------------------
 
 // Declaration and initialization of the global complexity variable
-// unsigned int COMPLEXITY = 0;
+unsigned long COMPLEXITY = 0;
 
 //------------------------------------------------------------------------------
 // FUNCTIONS FROM FILE "list.c"

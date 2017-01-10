@@ -11,7 +11,7 @@
 #include "dijkstra.h"
 
 // Global variable which should be used as an accumulator for complexity computation
-// extern unsigned int COMPLEXITY;
+extern unsigned long COMPLEXITY;
 
 // Functions from file "list.c"
 int ComplexityOf_createList ();

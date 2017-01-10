@@ -28,6 +28,8 @@ Edge* createEdge (int origin, int destination, int weight, Edge* next)
 	new_edge->weight 	  = weight;
 	new_edge->next 		  = next;
 
+	COMPLEXITY += 6;
+
 	return new_edge;
 }
 
